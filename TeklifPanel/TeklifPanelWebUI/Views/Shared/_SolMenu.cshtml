@@ -1,0 +1,105 @@
+﻿<!-- Sidebar  -->
+<nav id="sidebar">
+    <div class="sidebar-header">
+        <img src="/Content/images/logo/pantek-logo.png" alt="" width="100%">
+    </div>
+
+    <ul class="list-unstyled components">
+        <p>
+            Hoşgeldiniz Sayın
+            İNFO@FİRMA.COM
+        </p>
+        <li>
+            <a asp-controller="Home" asp-action="Index"><i class="fas fa-home"></i> Anasayfa</a>
+        </li>
+        @if (User.IsInRole("Admin"))
+        {
+            <li>
+                <a asp-controller="Company" asp-action="Settings"><i class="fas fa-cog"></i> Ayarlar</a>
+            </li>
+        }
+        @if (User.IsInRole("SuperAdmin"))
+        {
+            <li>
+                <a href="#pageSubmenu4" data-toggle="collapse" aria-expanded="false" class="dropdown-toggle"><i class="fas fa-user"></i> Firmalar</a>
+                <ul class="collapse list-unstyled" id="pageSubmenu4">
+                    <li>
+                        <a asp-controller="SuperAdmin" asp-action="CompanyList">Firma Listesi</a>
+                    </li>
+                    <li>
+                        <a asp-controller="SuperAdmin" asp-action="CompanyCreate">Firma Oluştur</a>
+                    </li>
+                    @*                    <li>
+                <a asp-controller="SuperAdmin" asp-action="RoleList">Rol Listesi</a>
+                </li>
+                <li>
+                <a asp-controller="SuperAdmin" asp-action="RoleCreate">Rol Oluştur</a>
+                </li>*@
+                </ul>
+            </li>
+        }
+        @if (User.IsInRole("Admin"))
+        {
+            <li>
+                <a href="#pageSubmenu4" data-toggle="collapse" aria-expanded="false" class="dropdown-toggle"><i class="fas fa-user"></i> Kullanıcılar</a>
+                <ul class="collapse list-unstyled" id="pageSubmenu4">
+                    <li>
+                        <a asp-controller="Admin" asp-action="UserList">Kullanıcı Listesi</a>
+                    </li>
+                    <li>
+                        <a asp-controller="Admin" asp-action="UserCreate">Kullanıcı Oluştur</a>
+                    </li>
+                </ul>
+            </li>
+        }
+        @if (!User.IsInRole("SuperAdmin"))
+        {
+            <li>
+                <a href="#pageSubmenu" data-toggle="collapse" aria-expanded="false" class="dropdown-toggle">
+                    <i class="fas fa-users"></i> Müşteriler
+                </a>
+                <ul class="collapse list-unstyled" id="pageSubmenu">
+                    <li>
+                        <a asp-controller="Customer" asp-action="CustomerList">Müşteri Listesi</a>
+                    </li>
+                    <li>
+                        <a asp-controller="Customer" asp-action="AddCustomer">Müşteri Ekle</a>
+                    </li>
+                </ul>
+            </li>
+            <li>
+                <a href="#pageSubmenu2" data-toggle="collapse" aria-expanded="false" class="dropdown-toggle">
+                    <i class="fas fa-box-open"></i>Ürünler
+                </a>
+                <ul class="collapse list-unstyled" id="pageSubmenu2">
+                    <li>
+                        <a href="/Product/ProductList">Ürün Listesi</a>
+                    </li>
+                    <li>
+                        <a href="/Product/AddProduct">Ürün Ekle</a>
+                    </li>
+                    <li>
+                        <a href="/Category/CategoryList">Kategorisi Listesi</a>
+                    </li>
+                    <li>
+                        <a href="/Category/AddCategory">Kategorisi Ekle</a>
+                    </li>
+                </ul>
+            </li>
+            <li>
+                <a href="#pageSubmenu3" data-toggle="collapse" aria-expanded="false" class="dropdown-toggle">
+                    <i class="fas fa-file-contract"></i> Teklifler
+                </a>
+                <ul class="collapse list-unstyled" id="pageSubmenu3">
+                    <li>
+                        <a href="teklifler.html">Teklif Listesi</a>
+                    </li>
+                    <li>
+                        <a href="teklifekle.html">Teklif Ekle</a>
+                    </li>
+                </ul>
+            </li>
+        }
+    </ul>
+
+</nav>

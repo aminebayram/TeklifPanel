@@ -1,0 +1,26 @@
+﻿@model List<Category>
+<table class="table-fill">
+    <thead>
+        <tr>
+            <th>Kategori Adı</th>
+            <th>Kategori Açıklama</th>
+            <th>İşlemler</th>
+        </tr>
+    </thead>
+    <tbody class="table-hover">
+        @foreach (var category in Model)
+        {
+            <tr>
+                <td>@category.Name</td>
+                <td>@category.Details</td>
+                <td class="text-center">
+                    <a href="kategoriguncelledty.html">
+                        <i class="fas fa-pen"
+                           style="padding-right: 6%;"></i>
+                    </a><i class="fas fa-times"></i>
+                </td>
+            </tr>
+        }
+
+    </tbody>
+</table>

@@ -1,0 +1,181 @@
+﻿@model CompanySettingsViewModel
+
+@{
+    int index = Model.Ibans.Count();
+}
+
+@if (TempData["Message"] != null)
+{
+    <div class="alert alert-success alert-dismissible fade show" role="alert">
+        <strong>Başarılı!</strong> @TempData["Message"]
+        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+    </div>
+}
+@if (TempData["Error"] != null)
+{
+    <div class="alert alert-danger alert-dismissible fade show" role="alert">
+        <strong>HATA!</strong> @TempData["Error"]
+        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+    </div>
+}
+
+<input type="hidden" value="@index" id="IbanIndex" />
+<div class="container musteri">
+    <form asp-controller="Company" asp-action="Settings" method="post" enctype="multipart/form-data">
+        <div class="form-row row">
+            <div class="form-group col-lg-12 col-md-12 col-12">
+                <label class="control-label">
+                    Alıcı E-mail
+                </label>
+                <input type="text" class="form-control" name="RecipientEmail" maxlength="255" value="@Model.RecipientEmail" />
+            </div>
+            <div class="form-group col-lg-6 col-md-6 col-12">
+                <label class="control-label">
+                    E-mail Sunucusu
+                </label>
+                <input type="text" class="form-control" name="EmailServer" maxlength="255" value="@Model.EmailServer">
+            </div>
+            <div class="form-group col-lg-6 col-md-6 col-12">
+                <label class="control-label">
+                    E-mail Sunucu Port
+                </label>
+                <input type="text" class="form-control" name="EmailServerPort" maxlength="255" value="@Model.EmailServerPort">
+            </div>
+            <div class="form-group col-lg-6 col-md-6 col-12">
+                <label class="control-label">
+                    E-mail Adresi
+                </label>
+                <input type="text" class="form-control" name="EmailUsername" maxlength="255" value="@Model.EmailUsername">
+            </div>
+
+            <div class="form-group col-lg-6 col-md-6 col-12">
+                <label class="control-label">
+                    E-mail Parola
+                </label>
+                <input type="password" class="form-control" name="EmailPassword" maxlength="255" value="@Model.EmailPassword">
+            </div>
+
+            <div class="form-group">
+                <label class="control-label" style="width: 5%;">Logo</label>
+                <input type="file" name="Logo" accept="image">
+                <img src="@Jobs.ImageRoute@Model.Id/@Model.Logo">
+            </div>
+
+            <div class="form-group">
+                <label class="control-label" style=" width: 5%;">Logo 2</label>
+                <input type="file" name="Logo2" accept="image">
+                <img src="@Jobs.ImageRoute@Model.Id/@Model.Logo2">
+            </div>
+            <div class="form-group col-lg-6 col-md-6 col-12">
+                <label class="control-label">
+                    Mailiniz
+                </label>
+                <input type="text" class="form-control" name="EmailAddress" maxlength="255" value="@Model.EmailAddress">
+            </div>
+            <div class="form-group col-lg-6 col-md-6 col-12">
+                <label class="control-label">
+                    Telefon Numaranız
+                </label>
+                <input type="text" class="form-control" name="PhoneNumber" maxlength="255" value="@Model.PhoneNumber">
+            </div>
+
+            <div class="form-group col-lg-12 col-md-12 col-12">
+                <label class="control-label">
+                    Adresiniz
+                </label>
+                <input type="text" class="form-control" name="Address" maxlength="255" value="@Model.Address">
+            </div>
+            <hr class="mt-5">
+            <div id="ibanContainer" class="row">
+                @foreach (var iban in Model.Ibans)
+                {
+                    <input type="hidden" value="@iban.Id" name="Id" />
+                    var ibanid = "iban" + Model.Ibans.ToList().IndexOf(iban);
+                    var titleid = "title" + Model.Ibans.ToList().IndexOf(iban);
+                    var inputid = "titleiban" + Model.Ibans.ToList().IndexOf(iban);
+                    <div class="form-group col-lg-4 col-md-4 col-4">
+                        <label class="control-label">Banka Adı</label>
+                        <input required type="text" class="form-control" name="Title" maxlength="255" id="@titleid" onchange="SetIbansVal(@Model.Ibans.ToList().IndexOf(iban))" value="@iban.Title">
+                    </div>
+                    <div class="form-group col-lg-6 col-md-6 col-6">
+                        <label class="control-label">İban</label>
+                        <input required type="text" class="form-control" name="IbanNumber" maxlength="255" id="@ibanid" onchange="SetIbansVal(@Model.Ibans.ToList().IndexOf(iban))" value="@iban.IbanNumber">
+                    </div>
+                    <div class="form-group col-lg-2 col-md-2 col-2">
+                        <a class="btn btn-danger silmebuton" asp-controller="Company" asp-action="IbanDelete" asp-route-id="@iban.Id">Sil</a>
+                    </div>
+                    <input type="hidden" id="@inputid" name="IbanTitle" />
+                }
+            </div>
+            <div class="yetkiliekle">
+                <p>İban Ekle</p>
+                <i onclick="GetNewIbanColumn('@index')" id="addIban" class="fas fa-plus" style="cursor:pointer"></i>
+            </div>
+        </div>
+        <button type="submit" class="btn btn-primary">Ayarları Güncelle</button>
+    </form>
+</div>
+
+<script>
+    function GetNewIbanColumn() {
+        let index = $("#IbanIndex").val();
+
+        var ibanid = "iban" + index;
+        var titleid = "title" + index;
+        var inputid = "titleiban" + index;
+
+        var ibanContainer = document.getElementById('ibanContainer');
+        var ibanHtml = `
+                <div class="row iban-entry">
+                    <div class="form-group col-lg-4 col-md-4 col-4">
+                        <label class="control-label">Banka Adı</label>
+                            <input required type="text" class="form-control" id=${titleid} name="Title" onchange="SetIbansVal(${index})" maxlength="255">
+                    </div>
+                    <div class="form-group col-lg-6 col-md-6 col-6">
+                        <label class="control-label">İban</label>
+                            <input required type="text" class="form-control" id=${ibanid} name="IbanNumber" onchange="SetIbansVal(${index})" maxlength="255">
+                    </div>
+                    <div class="form-group col-lg-2 col-md-2 col-2">
+                        <button class=" btn btn-danger silmebuton remove-iban" >Sil</button>
+                    </div>
+                </div>
+                    <input type="hidden" name="IbanTitle" id="${inputid}"> `;
+        ibanContainer.insertAdjacentHTML('beforeend', ibanHtml);
+        index = ++index;
+        $("#IbanIndex").val(index);
+    }
+
+    //Iban silme
+    document.getElementById('ibanContainer').addEventListener('click', function (e) {
+        if (e.target.classList.contains('remove-iban')) {
+            e.target.closest('.iban-entry').remove();
+        }
+    });
+
+    function SetIbansVal(index) {
+        let titleIban = 'titleiban' + index;
+        var title = document.getElementById("title" + index).value;
+        var iban = document.getElementById("iban" + index).value;
+        document.getElementById(titleIban).value = title + "&" + iban;
+    }
+</script>
+
+<script>
+    // İban eklemek için JavaScript kullanımı
+    //document.getElementById('addIban').addEventListener('click', function () {
+    //    var ibanContainer = document.getElementById('ibanContainer');
+    //    var ibanHtml = `
+    //         <div class="row">
+    //                 <div class="form-group col-lg-6 col-md-6 col-6">
+    //                     <label class="control-label">Banka Adı</label>
+    //                         <input type="text" class="form-control" name="Title" maxlength="255">
+    //                 </div>
+    //                 <div class="form-group col-lg-6 col-md-6 col-6">
+    //                     <label class="control-label">İban</label>
+    //                     <input type="text" class="form-control" name="IbanNumber" maxlength="255">
+    //                 </div>
+    //         </div>
+    //                                                `;
+    //    ibanContainer.insertAdjacentHTML('beforeend', ibanHtml);
+    //});
+</script>

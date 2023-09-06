@@ -1,0 +1,78 @@
+﻿@model List<User>
+
+@if (TempData["Message"] != null)
+{
+    <div class="alert alert-success alert-dismissible fade show" role="alert">
+        <strong>Başarılı!</strong> @TempData["Message"]
+        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+    </div>
+}
+@if (TempData["Error"] != null)
+{
+    <div class="alert alert-danger alert-dismissible fade show" role="alert">
+        <strong>HATA!</strong> @TempData["Error"]
+        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+    </div>
+}
+<div class="row" style="margin: 2% 6%;">
+    <div class="col-lg-7 col-md-7 col-12">
+        <div class="table-title">
+            <h3>Kullanıcılar</h3>
+        </div>
+    </div>
+
+    <div class="col-lg-5 col-md-5 col-12 ekleme">
+        <div class="search">
+            <input type="text" class="searchTerm" placeholder="Arama Yapın">
+            <button type="submit" class="searchButton">
+                <i class="fa fa-search"></i>
+            </button>
+        </div>
+    </div>
+
+</div>
+
+<table class="table-fill">
+    <thead>
+        <tr>
+            <th class="text-center">Adı</th>
+            <th class="text-center">Soyadı</th>
+            <th class="text-center">Mail Adresi</th>
+            <th class="text-center">İşlemler</th>
+        </tr>
+    </thead>
+    <tbody class="table-hover">
+
+        @{
+
+            if (User.IsInRole("Admin"))
+            {
+                var userName = User.Identity.Name.ToString();
+                var admin = Model.FirstOrDefault(x => x.UserName == userName);
+                <tr>
+                    <td class="text-center">@admin.FirstName</td>
+                    <td class="text-center">@admin.LastName</td>
+                    <td class="text-center">@admin.Email</td>
+                    <td class="text-center">
+                        <a asp-controller="Admin" asp-action="UserEdit" asp-route-id="@admin.Id"><i class="fas fa-pen" style="padding-right: 6%;"></i></a>
+                    </td>
+                </tr>
+
+                foreach (var user in Model.Where(x => x.UserName != userName))
+                {
+                    <tr>
+                        <td class="text-center">@user.FirstName</td>
+                        <td class="text-center">@user.LastName</td>
+                        <td class="text-center">@user.Email</td>
+                        <td class="text-center">
+                            <a asp-controller="Admin" asp-action="UserEdit" asp-route-id="@user.Id"><i class="fas fa-pen" style="padding-right: 6%;"></i></a>
+                            <a asp-controller="Admin" asp-action="UserDelete" asp-route-id="@user.Id"><i class="fas fa-times"></i></a>
+                        </td>
+                    </tr>
+                }
+            }
+        }
+
+
+    </tbody>
+</table>

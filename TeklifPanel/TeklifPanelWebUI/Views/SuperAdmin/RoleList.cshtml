@@ -1,0 +1,38 @@
+﻿@model List<IdentityRole>
+
+
+<div class="row" style="margin: 2% 6%;">
+    <div class="col-lg-7 col-md-7 col-12">
+        <div class="table-title">
+            <h3>Kullanıcılar</h3>
+        </div>
+    </div>
+
+    <div class="col-lg-5 col-md-5 col-12 ekleme">
+        <div class="search">
+            <input type="text" class="searchTerm" placeholder="Arama Yapın">
+            <button type="submit" class="searchButton">
+                <i class="fa fa-search"></i>
+            </button>
+        </div>
+    </div>
+
+</div>
+
+<table class="table-fill">
+    <thead>
+        <tr>
+            <th class="text-center">Rol Adı</th>
+            <th class="text-center">İşlemler</th>
+        </tr>
+    </thead>
+    <tbody class="table-hover">
+        @foreach (var role in Model)
+        {
+            <tr>
+                <td class="text-center">@role.Name</td>
+                <td class="text-center"><a asp-controller="Admin" asp-action="RoleEdit"><i class="fas fa-pen" style="padding-right: 6%;"></i></a><i class="fas fa-times"></i></td>
+            </tr>
+        }
+    </tbody>
+</table>

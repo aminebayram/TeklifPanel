@@ -1,0 +1,15 @@
+﻿@model RoleModel
+
+<div class="container musteri">
+    <form asp-controller="Admin" asp-action="RoleCreate" method="post">
+        <div class="form-row row">
+            <div class="form-group col-lg-6 col-md-6 col-12">
+                <label for="inputName">Kullanıcı Adı</label>
+                <input type="text" class="form-control" placeholder="Role Adı" asp-for="Name">
+            </div>
+            <div class="gonder">
+                <button type="submit" class="btn btn-primary" href="index.html">Rol Ekle</button>
+            </div>
+        </div>
+    </form>
+</div>

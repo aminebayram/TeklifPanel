@@ -1,0 +1,28 @@
+﻿@model LoginModel
+@{
+    Layout = "~/Views/Shared/_LayoutLogin.cshtml";
+
+
+}
+
+<div class="login-box">
+    @if (TempData["AlertMessage"] != null)
+    {
+        <div class="alert alert-danger" role="alert">@TempData["AlertMessage"]</div>
+    }
+    <h2>Teklif Oluşturma Paneline Hoşgeldiniz</h2>
+    <form asp-controller="Login" asp-action="Login" method="post">
+        <div class="user-box">
+            <input type="email" required="" asp-for="Email">
+            <label>E-mail</label>
+        </div>
+        <div class="user-box">
+            <input type="password" required="" asp-for="Password">
+            <label>Şifre</label>
+        </div>
+        <button class="btn" type="submit">
+            Giriş
+        </button>
+    </form>
+</div>
+

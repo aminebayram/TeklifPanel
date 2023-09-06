@@ -1,0 +1,53 @@
+﻿@model ICollection<Company>
+@if (TempData["Message"] != null)
+{
+    <div class="alert alert-success alert-dismissible fade show" role="alert">
+        <strong>Başarılı!</strong> @TempData["Message"]
+        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+    </div>
+}
+@if (TempData["Error"] != null)
+{
+    <div class="alert alert-danger alert-dismissible fade show" role="alert">
+        <strong>HATA!</strong> @TempData["Error"]
+        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+    </div>
+}
+<div class="row" style="margin: 2% 6%;">
+    <div class="col-lg-7 col-md-7 col-12">
+        <div class="table-title">
+            <h3>Firmalar</h3>
+        </div>
+    </div>
+
+    <div class="col-lg-5 col-md-5 col-12 ekleme">
+        <div class="search">
+            <input type="text" class="searchTerm" placeholder="Arama Yapın">
+            <button type="submit" class="searchButton">
+                <i class="fa fa-search"></i>
+            </button>
+        </div>
+    </div>
+
+</div>
+
+<table class="table-fill">
+    <thead>
+        <tr>
+            <th class="text-center">Firma Adı</th>
+            <th class="text-center">İşlemler</th>
+        </tr>
+    </thead>
+    <tbody class="table-hover">
+        @foreach (var company in Model.Where(c => c.IsActive == false))
+        {
+            <tr>
+                <td class="text-center">@company.Name</td>
+                <td class="text-center">
+                    <a asp-controller="SuperAdmin" asp-action="CompanyUnDelete" asp-route-id="@company.Id"><i title="Geri yükle" class="fas fa-trash-restore" style="padding-right: 6%;"></i></a>
+                    <a asp-controller="SuperAdmin" asp-action="CompanyPermanentlyDelete" asp-route-id="@company.Id"><i title="Kalıcı olarak sil" class="fas fa-user-slash"></i></a>
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>

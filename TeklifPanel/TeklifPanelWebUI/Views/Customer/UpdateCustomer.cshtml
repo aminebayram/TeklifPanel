@@ -1,0 +1,155 @@
+﻿@model CustomerViewModel
+
+@if (TempData["Message"] != null)
+{
+    <div class="alert alert-success alert-dismissible fade show" role="alert">
+        <strong>Başarılı!</strong> @TempData["Message"]
+        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+    </div>
+}
+@if (TempData["Error"] != null)
+{
+    <div class="alert alert-danger alert-dismissible fade show" role="alert">
+        <strong>HATA!</strong> @TempData["Error"]
+        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+    </div>
+}
+
+<div class="container musteri">
+    <form asp-controller="Customer" asp-action="UpdateCustomer" method="post">
+        <input type="hidden" name="Id" value="@Model.Id" />
+        <div class="form-row row">
+            <div class="form-group col-lg-6 col-md-6 col-12">
+                <label for="inputName">Firma Adı</label>
+                <input type="text" class="form-control" id="inputName" name="Name" value="@Model.Name" placeholder="Ad" required>
+            </div>
+            <div class="form-group col-lg-6 col-md-6 col-12">
+                <label for="inputPTel">Firma Telefon</label>
+                <input type="number" class="form-control" id="inputTel" name="Phone" value="@Model.Phone" placeholder="Telefon" required>
+            </div>
+
+            <div class="form-group col-lg-6 col-md-6 col-12">
+                <label for="inputAddress">Firma Adres</label>
+                <input type="text" class="form-control" id="inputAddress" name="OpenAddress" value="@Model.OpenAddress" placeholder="Adres" required>
+            </div>
+
+            <div class="form-group col-lg-6 col-md-6 col-12">
+                <label for="inputAddress">Firma Bazlı İskonto</label>
+                <input type="text" class="form-control" id="inputIskonto" name="Discount" value="%@Model.Discount" placeholder="%" required pattern="[0-9]+(\,[0-9]+)?" title="Lütfen geçerli bir sayı girin (örneğin: 12 veya 12,5)">
+            </div>
+
+            <div class="form-group col-lg-6 col-md-6 col-12">
+                <label for="inputName">Firma Vergi Numarası</label>
+                <input type="number" class="form-control" id="inputvergino" name="TaxNumber" value="@Model.TaxNumber" placeholder="Vergi Numarası" required>
+            </div>
+
+            <div class="form-group col-lg-6 col-md-6 col-12">
+                <label for="inputPTel">Firma Vergi Dairesi</label>
+                <input type="text" class="form-control" id="inputvergidaire" name="TaxOffice" value="@Model.TaxOffice" placeholder="Vergi Dairesi" required>
+            </div>
+        </div>
+        <div class="form-group">
+            <label for="exampleFormControlTextarea1">Yalnızca Sizin Göreceğiniz Firmaya Ait Notlar</label>
+            <textarea class="form-control" id="exampleFormControlTextarea1" name="Note" rows="3">@Model.Note</textarea>
+        </div>
+        <div class="form-group">
+            <label for="inputEmail">Firma Email</label>
+            <input type="email" class="form-control" name="Email" value="@Model.Email" placeholder="Email Adresi" required />
+        </div>
+
+        <div class="yetkili">
+            KONTAKT KİŞİLERİ
+        </div>
+        <div id="contactPerson" class="row">
+            <div class="form-row row">
+                @*Burası JavaScript ile ekleniyor*@
+                @foreach (var contactPerson in Model.CustomerContacts)
+                {
+                    <input type="hidden" name="ContactId" value="@contactPerson.Id" />
+                    <div class="contact-entry mb-4">
+                        <div class="form-row row">
+                            <div class="form-group col-lg-5 col-md-5 col-12">
+                                <label for="inputName">Yetkili Adı</label>
+                                <input type="text" class="form-control" id="inputName" name="ContactName" value="@contactPerson.Name" placeholder="Ad" required>
+                            </div>
+                            <div class="form-group col-lg-5 col-md-5 col-12">
+                                <label for="inputPTel">Yetkili Departmanı</label>
+                                <input type="text" class="form-control" id="inputTel" name="Department" value="@contactPerson.Department" placeholder="Departman" required>
+                            </div>
+                        </div>
+
+                        <div class="form-row row">
+                            <div class="form-group col-lg-5 col-md-5 col-12">
+                                <label for="inputName">Yetkili Maili</label>
+                                <input type="email" class="form-control" id="inputName" name="ContactEmail" value="@contactPerson.Email" placeholder="Mail" required>
+                            </div>
+                            <div class="form-group col-lg-5 col-md-5 col-12">
+                                <label for="inputPTel">Yetkili Numarası</label>
+                                <input type="number" class="form-control" id="inputTel" name="ContactPhone" value="@contactPerson.Phone" placeholder="Telefon" required>
+                            </div>
+                            <div class="form-group col-lg-1 col-md-1 col-12">
+                                <a class="btn btn-danger silmebuton" asp-controller="Customer" asp-action="ContactPersonDelete" asp-route-id="@contactPerson.Id">Sil</a>
+                            </div>
+                        </div>
+                    </div>
+                    <hr />
+                }
+            </div>
+        </div>
+        <div class="yetkiliekle">
+            <p>Yetkili Ekle</p>
+            <i id="addContactPerson" class="fas fa-plus" style="cursor:pointer"></i>
+        </div>
+
+        <div class="gonder">
+            <button type="submit" class="btn btn-primary">Müşteriyi Güncelle</button>
+        </div>
+
+    </form>
+</div>
+
+@*ContactPerson Ekleme*@
+<script>
+    document.getElementById('addContactPerson').addEventListener('click', function () {
+        var contactPerson = document.getElementById('contactPerson');
+        var contactHtml = `
+                <div class="contact-entry mb-4">
+                    <div class="form-row row">
+                        <div class="form-group col-lg-5 col-md-5 col-12">
+                            <label for="inputName">Yetkili Adı</label>
+                            <input type="text" class="form-control" id="inputName" name="ContactName" placeholder="Ad" required>
+                        </div>
+                        <div class="form-group col-lg-5 col-md-5 col-12">
+                            <label for="inputPTel">Yetkili Departmanı</label>
+                            <input type="text" class="form-control" id="inputTel" name="Department" placeholder="Departman" required>
+                        </div>
+                    </div>
+
+                    <div class="form-row row">
+                        <div class="form-group col-lg-5 col-md-5 col-12">
+                            <label for="inputName">Yetkili Maili</label>
+                            <input type="email" class="form-control" id="inputName" name="ContactEmail" placeholder="Mail" required>
+                        </div>
+                        <div class="form-group col-lg-5 col-md-5 col-12">
+                            <label for="inputPTel">Yetkili Numarası</label>
+                            <input type="number" class="form-control" id="inputTel" name="ContactPhone" placeholder="Telefon" required>
+                        </div>
+                        <div class="form-group col-lg-1 col-md-1 col-12">
+                            <button class=" btn btn-danger  remove-contact" >Sil</button>
+                        </div>
+                    </div>
+                </div>
+                <hr />
+                        `;
+        contactPerson.insertAdjacentHTML('beforeend', contactHtml);
+
+    });
+
+    //ContactPerson Silme
+    document.getElementById('contactPerson').addEventListener('click', function (e) {
+        if (e.target.classList.contains('remove-contact')) {
+            e.target.closest('.contact-entry').remove();
+        }
+    });
+
+</script>

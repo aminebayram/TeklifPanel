@@ -1,0 +1,107 @@
+﻿
+<div class="container musteri">
+    <form asp-controller="Customer" asp-action="AddCustomer" method="post">
+        <div class="form-row row">
+            <div class="form-group col-lg-6 col-md-6 col-12">
+                <label for="inputName">Firma Adı</label>
+                <input type="text" class="form-control" id="inputName" name="Name" placeholder="Ad" required>
+            </div>
+            <div class="form-group col-lg-6 col-md-6 col-12">
+                <label for="inputPTel">Firma Telefon</label>
+                <input type="number" class="form-control" id="inputTel" name="Phone" placeholder="Telefon" required>
+            </div>
+
+            <div class="form-group col-lg-6 col-md-6 col-12">
+                <label for="inputAddress">Firma Adres</label>
+                <input type="text" class="form-control" id="inputAddress" name="OpenAddress" placeholder="Adres" required>
+            </div>
+
+            <div class="form-group col-lg-6 col-md-6 col-12">
+                <label for="inputAddress">Firma Bazlı İskonto</label>
+                <input type="text" class="form-control" id="inputIskonto" name="Discount" placeholder="%" required pattern="[0-9]+(\,[0-9]+?" title="Lütfen geçerli bir sayı girin (örneğin: 12 veya 12,5)">
+            </div>
+
+            <div class="form-group col-lg-6 col-md-6 col-12">
+                <label for="inputName">Firma Vergi Numarası</label>
+                <input type="number" class="form-control" id="inputvergino" name="TaxNumber" placeholder="Vergi Numarası" required>
+            </div>
+
+            <div class="form-group col-lg-6 col-md-6 col-12">
+                <label for="inputPTel">Firma Vergi Dairesi</label>
+                <input type="text" class="form-control" id="inputvergidaire" name="TaxOffice" placeholder="Vergi Dairesi" required>
+            </div>
+        </div>
+                <div class="form-group">
+            <label for="exampleFormControlTextarea1">Yalnızca Sizin Göreceğiniz Firmaya Ait Notlar</label>
+            <textarea class="form-control" id="exampleFormControlTextarea1" name="Note" rows="3"></textarea>
+        </div>
+        <div class="form-group">
+            <label for="inputEmail">Firma Email</label>
+            <input type="email" class="form-control" name="Email" placeholder="Email Adresi" required/>
+        </div>
+
+        <div class="yetkili">
+            KONTAKT KİŞİLERİ
+        </div>
+        <div id="contactPerson" class="row">
+            <div class="form-row row">
+                @*Burası JavaScript ile ekleniyor*@
+            </div>
+        </div>
+        <div class="yetkiliekle">
+            <p>Yetkili Ekle</p>
+            <i id="addContactPerson" class="fas fa-plus" style="cursor:pointer"></i>
+        </div>
+
+        <div class="gonder">
+            <button  type="submit" class="btn btn-primary">Müşteriyi Ekle</button>
+        </div>
+
+    </form>
+</div>
+
+@*ContactPerson Ekleme*@
+<script>
+    document.getElementById('addContactPerson').addEventListener('click', function () {
+        var contactPerson = document.getElementById('contactPerson');
+        var contactHtml = `
+            <div class="contact-entry mb-4">
+                <div class="form-row row">
+                    <div class="form-group col-lg-5 col-md-5 col-12">
+                        <label for="inputName">Yetkili Adı</label>
+                        <input type="text" class="form-control" id="inputName" name="ContactName" placeholder="Ad" required>
+                    </div>
+                    <div class="form-group col-lg-5 col-md-5 col-12">
+                        <label for="inputPTel">Yetkili Departmanı</label>
+                        <input type="text" class="form-control" id="inputTel" name="Department" placeholder="Departman" required>
+                    </div>
+                </div>
+
+                <div class="form-row row">
+                    <div class="form-group col-lg-5 col-md-5 col-12">
+                        <label for="inputName">Yetkili Maili</label>
+                        <input type="email" class="form-control" id="inputName" name="ContactEmail" placeholder="Mail" required>
+                    </div>
+                    <div class="form-group col-lg-5 col-md-5 col-12">
+                        <label for="inputPTel">Yetkili Numarası</label>
+                        <input type="number" class="form-control" id="inputTel" name="ContactPhone" placeholder="Telefon" required>
+                    </div>
+                    <div class="form-group col-lg-1 col-md-1 col-12">
+                        <button class=" btn btn-danger  remove-contact" >Sil</button>
+                    </div>
+                </div>
+            </div>
+            <hr />
+                `;
+        contactPerson.insertAdjacentHTML('beforeend', contactHtml);
+
+    });
+
+    //ContactPerson Silme
+    document.getElementById('contactPerson').addEventListener('click', function(e){
+        if (e.target.classList.contains('remove-contact')){
+            e.target.closest('.contact-entry').remove();
+        }
+    });
+    
+</script>

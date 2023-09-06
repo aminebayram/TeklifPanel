@@ -1,0 +1,164 @@
+﻿
+@if (TempData["Message"] != null)
+{
+    <div class="alert alert-success alert-dismissible fade show" role="alert">
+        <strong>Başarılı!</strong> @TempData["Message"]
+        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+    </div>
+}
+@if (TempData["Error"] != null)
+{
+    <div class="alert alert-danger alert-dismissible fade show" role="alert">
+        <strong>HATA!</strong> @TempData["Error"]
+        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+    </div>
+}
+
+<div class="dashboard container">
+
+    <div class="row">
+        <div class="col-lg-12 col-md-12 col-12">
+
+            <div class="row">
+                <div class="col-lg-3 col-md-3 col-12">
+                    <div class="kutucuk" style="background-color: #26A69A;">
+                        <div class="kutucuk-sayi">
+                            14
+                            <p>Gönderilmiş Teklif</p>
+                        </div>
+                        <div class="kutucuk-tarih">
+                            20.07.2023
+                        </div>
+                    </div>
+                </div>
+
+                <div class="col-lg-3 col-md-3 col-12">
+                    <div class="kutucuk" style="background-color: #EC407A;">
+                        <div class="kutucuk-sayi">
+                            25
+                            <p>Müşteri</p>
+                        </div>
+                        <div class="kutucuk-tarih">
+                            20.07.2023
+                        </div>
+                    </div>
+                </div>
+
+                <div class="col-lg-3 col-md-3 col-12">
+                    <div class="kutucuk" style="background-color: #FFA726;">
+                        <div class="kutucuk-sayi">
+                            14
+                            <p>Gönderilmiş Teklif</p>
+                        </div>
+                        <div class="kutucuk-tarih">
+                            20.07.2023
+                        </div>
+                    </div>
+                </div>
+
+                <div class="col-lg-3 col-md-3 col-12">
+                    <div class="kutucuk" style="background-color: #9CCC65;">
+                        <div class="kutucuk-sayi">
+                            14
+                            <p>Gönderilmiş Teklif</p>
+                        </div>
+                        <div class="kutucuk-tarih">
+                            20.07.2023
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+
+        <div class="col-lg-8 col-md-8 col-12 mt-4">
+            <div class="dash-bilgiler">
+                <div class="dash-bilgi-title">
+                    Teklif Gönderdiğiniz Son 10 Firma
+                </div>
+                <table class="table-fill">
+                    <thead>
+                        <tr>
+                            <th class="text-left">Göderilen Firma</th>
+                            <th class="text-left">Yetkili</th>
+                            <th class="text-left">Gönderici</th>
+                            <th class="text-left">Gönderme Saati</th>
+                            <th class="text-left">İskonto</th>
+                            <th class="text-left">Görüntüle</th>
+                        </tr>
+                    </thead>
+                    <tbody class="table-hover">
+                        <tr>
+                            <td class="text-left">Demir Çelik</td>
+                            <td class="text-left">Işıl Demir</td>
+                            <td class="text-left">Emir Çiçek</td>
+                            <td class="text-left">20.07.2023 13.57</td>
+                            <td class="text-left">%13</td>
+                            <td class="text-left">
+                                <a href="onizleme.html">
+                                    <i class="fas fa-eye"></i>
+                                </a>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td class="text-left">Demir Çelik</td>
+                            <td class="text-left">Işıl Demir</td>
+                            <td class="text-left">Emir Çiçek</td>
+                            <td class="text-left">20.07.2023 13.57</td>
+                            <td class="text-left">%13</td>
+                            <td class="text-left">
+                                <a href="onizleme.html">
+                                    <i class="fas fa-eye"></i>
+                                </a>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td class="text-left">Demir Çelik</td>
+                            <td class="text-left">Işıl Demir</td>
+                            <td class="text-left">Emir Çiçek</td>
+                            <td class="text-left">20.07.2023 13.57</td>
+                            <td class="text-left">%13</td>
+                            <td class="text-left">
+                                <a href="onizleme.html">
+                                    <i class="fas fa-eye"></i>
+                                </a>
+                            </td>
+                        </tr>
+
+                    </tbody>
+                </table>
+            </div>
+        </div>
+        <div class="col-lg-4 col-md-4 col-12 mt-4">
+            <div class="dash-bilgiler">
+                <div class="dash-bilgi-title">
+                    Son Giriş Bilgileri
+                </div>
+                <table class="table-fill">
+                    <thead>
+                        <tr>
+                            <th class="text-left">Kullanıcı E-Mail</th>
+                            <th class="text-left">Giriş Saati</th>
+                        </tr>
+                    </thead>
+                    <tbody class="table-hover">
+                        <tr>
+                            <td class="text-left">emircelik@demircelik.com</td>
+                            <td class="text-left">12.12.2021</td>
+                        </tr>
+                        <tr>
+                            <td class="text-left">emircelik@demircelik.com</td>
+                            <td class="text-left">12.12.2021</td>
+                        </tr>
+                        <tr>
+                            <td class="text-left">emircelik@demircelik.com</td>
+                            <td class="text-left">12.12.2021</td>
+                        </tr>
+
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+
+</div>

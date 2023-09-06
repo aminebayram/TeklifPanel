@@ -1,0 +1,84 @@
+﻿@model List<Product>
+
+@if (TempData["Message"] != null)
+{
+    <div class="alert alert-success alert-dismissible fade show" role="alert">
+        <strong>Başarılı!</strong> @TempData["Message"]
+        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+    </div>
+}
+@if (TempData["Error"] != null)
+{
+    <div class="alert alert-danger alert-dismissible fade show" role="alert">
+        <strong>HATA!</strong> @TempData["Error"]
+        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+    </div>
+}
+
+<div class="row" style="margin: 2% 6%;">
+    <div class="col-lg-5 col-md-4 col-12">
+        <div class="table-title">
+            <h3>
+                Kategorisindeki Ürünler
+            </h3>
+        </div>
+    </div>
+
+    <div class="col-lg-2 col-md-4 col-12">
+        <div class="dropdown kat">
+            <div class="dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false">
+                Ürün Kategorileri
+            </div>
+            <ul class="dropdown-menu">
+                @foreach (var category in (List<Category>)ViewBag.Categories)
+                {
+                    <li><a class="dropdown-item" href="/Product/ProductList/@category.Id">@category.Name</a></li>
+                }
+            </ul>
+        </div>
+    </div>
+
+    <div class="col-lg-5 col-md-4 col-12 ekleme">
+
+        <div class="search">
+            <input type="text" class="searchTerm" placeholder="Arama Yapın">
+            <button type="submit" class="searchButton">
+                <i class="fa fa-search"></i>
+            </button>
+        </div>
+    </div>
+</div>
+
+
+<table class="table-fill">
+    <thead>
+        <tr>
+            <th class="text-left">Ürün Fotoğrafı</th>
+            <th class="text-left">Ürün Adı</th>
+            <th class="text-left">Ürün Kodu</th>
+            <th class="text-left">Ürün Alış Fiyatı</th>
+            <th class="text-left">Ürün Satış Fiyatı</th>
+            <th class="text-left">Ürün Kısa Açıklama</th>
+            <th class="text-left">Ürün Sil</th>
+        </tr>
+    </thead>
+    <tbody class="table-hover">
+        @foreach (var product in Model)
+        {
+            <tr>
+                <td class="text-left">
+                    @*<img src="@Jobs.ImageRoute@product.CompanyId/@product.ProductImages" alt="">*@
+                </td>
+                <td class="text-left">@product.Name</td>
+                <td class="text-left">@product.Code</td>
+                <td class="text-left">@product.BuyPrice₺</td>
+                <td class="text-left">@product.SellPrice₺</td>
+                <td class="text-left">
+                    @product.Detail
+                </td>
+                <td class="text-center"><a href="urunguncelle.html"><i class="fas fa-pen" style="padding-right: 6%;"></i></a><i class="fas fa-times"></i></td>
+            </tr>
+        }
+
+    </tbody>
+</table>
