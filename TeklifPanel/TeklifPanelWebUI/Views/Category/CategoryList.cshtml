@@ -14,10 +14,8 @@
                 <td>@category.Name</td>
                 <td>@category.Details</td>
                 <td class="text-center">
-                    <a href="kategoriguncelledty.html">
-                        <i class="fas fa-pen"
-                           style="padding-right: 6%;"></i>
-                    </a><i class="fas fa-times"></i>
+                    <a href="/Category/UpdateCategory/@category.Id"><i class="fas fa-pen" style="padding-right: 6%;"></i></a>
+                    <a asp-controller="Category" asp-action="DeleteCategory" asp-route-id="@category.Id"><i class="fas fa-times"></i></a>
                 </td>
             </tr>
         }

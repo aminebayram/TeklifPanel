@@ -49,6 +49,11 @@ namespace TeklifPanel.Business.Concrete
             return await _contactPersonRepository.GetByIdAsync(id);
         }
 
+        public async Task<List<CustomerContact>> GetCustomerContacts(int companyId, int customerId)
+        {
+            return await _contactPersonRepository.GetCustomerContacts(companyId, customerId);
+        }
+
         public Task<ICollection<CustomerContact>> GetManyAsync(Expression<Func<CustomerContact, bool>> expression)
         {
             throw new NotImplementedException();

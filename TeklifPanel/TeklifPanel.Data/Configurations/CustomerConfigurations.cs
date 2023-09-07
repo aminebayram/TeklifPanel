@@ -17,7 +17,6 @@ namespace TeklifPanel.Data.Configurations
                 .WithMany(co => co.Customers)
                 .HasForeignKey(c => c.CompanyId)
                 .OnDelete(DeleteBehavior.NoAction);
-
         }
     }
 }

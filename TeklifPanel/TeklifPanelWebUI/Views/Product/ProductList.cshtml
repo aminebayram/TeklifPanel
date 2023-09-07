@@ -66,8 +66,14 @@
         @foreach (var product in Model)
         {
             <tr>
-                <td class="text-left">
-                    @*<img src="@Jobs.ImageRoute@product.CompanyId/@product.ProductImages" alt="">*@
+                <td class="text-center">
+                    @if (product.ProductImages.Count() > 0)
+                    {
+                        foreach (var image in product.ProductImages.Take(1))
+                        {
+                            <img src="@Jobs.ImageRoute@product.CompanyId/@image.Url" alt="">
+                        }
+                    }
                 </td>
                 <td class="text-left">@product.Name</td>
                 <td class="text-left">@product.Code</td>
@@ -76,7 +82,11 @@
                 <td class="text-left">
                     @product.Detail
                 </td>
-                <td class="text-center"><a href="urunguncelle.html"><i class="fas fa-pen" style="padding-right: 6%;"></i></a><i class="fas fa-times"></i></td>
+                <td class="text-center">
+                    <a asp-controller="Product" asp-action="UpdateProduct" asp-route-id="@product.Id"><i class="fas fa-pen" style="padding-right: 6%;"></i></a>
+                    <a asp-controller="Product" asp-action="DeleteProduct" asp-route-id="@product.Id"><i class="fas fa-times"></i></a>
+
+                </td>
             </tr>
         }
 

@@ -1,4 +1,4 @@
-﻿
+﻿@model List<Customer>
 
 
 <div class="container-fluid">
@@ -6,7 +6,7 @@
         <form id="msform">
             <!-- progressbar -->
             <ul id="progressbar">
-                <li class="active" id="account"><strong>Firmayı Seç</strong></li>
+                <li class="active" id="account"><strong>Müşteri Seç</strong></li>
                 <li id="personal"><strong>Ürünleri Seç</strong></li>
                 <li id="payment"><strong>Ön İzleme</strong></li>
                 <li id="confirm"><strong>Gönderildi</strong></li>
@@ -22,36 +22,30 @@
 
                     <div class="row">
                         <div class="col-7">
-                            <h2 class="fs-title">Firma bilgileri:</h2>
+                            <h2 class="fs-title">Müşteriler:</h2>
                         </div>
                         <div class="col-5">
                             <h2 class="steps">Adım 1 - 4</h2>
                         </div>
                     </div>
-
-                    <label for="firmalar" class="fieldlabels">Firmayı Seçin:</label>
-                    <br />
-                    <select id="firmalar">
+                    <label for="customers" class="fieldlabels">Müşteri Seçin:</label>
+                    <select id="customers" onchange="getContactPersonList()">
                         <option>Seçiniz</option>
-                        <option>Firma 1</option>
-                        <option>Firma 2</option>
-                        <option>Firma 3</option>
-                        <option>Firma 4</option>
+                        @foreach (var customer in Model)
+                        {
+                            <option value="@customer.Id">@customer.Name</option>
+                        }
                     </select>
-
-                    <label for="yetkililer" class="fieldlabels">Yetkiliyi Seçin:</label>
-                    <br />
-                    <select id="yetkililer">
-                        <option>Seçiniz</option>
-                        <option>Yetkili 1</option>
-                        <option>Yetkili 2</option>
-                        <option>Yetkili 3</option>
-                        <option>Yetkili 4</option>
-                    </select>
+                    <div id="contactPersonList">
+                        <label for="contactPersons" class="fieldlabels">Yetkiliyi Seçin:</label>
+                        <select id="contactPersons">
+                            <option>Seçiniz</option>
+                        </select>
+                    </div>
 
                 </div>
 
-                <input type="button" name="next" class="next action-button" value="İLERİ" />
+                <input type="button" name="next" class="next action-button" onclick="GoNext(1)" value="İLERİ" />
 
             </fieldset>
 
@@ -63,14 +57,13 @@
                             <h2 class="fs-title">Ürünler:</h2>
                         </div>
                         <div class="col-4">
-                            <label for="yetkililer" class="fieldlabels">Kategori Seçin:</label>
-                            <br />
-                            <select id="yetkililer">
+                            <label for="categoryId" class="fieldlabels">Kategori Seçin:</label>
+                            <select id="categoryId" onchange="getCategories()">
                                 <option>Seçiniz</option>
-                                <option>Kategori 1</option>
-                                <option>Kategori 2</option>
-                                <option>Kategori 3</option>
-                                <option>Kategori 4</option>
+                                @foreach (var category in (List<Category>)ViewBag.Categories)
+                                {
+                                    <option value="@category.Id">@category.Name</option>
+                                }
                             </select>
                         </div>
                         <div class="col-4">
@@ -92,110 +85,8 @@
                                 <th class="text-center">Ürün Seç/Kaldır</th>
                             </tr>
                         </thead>
-                        <tbody class="table-hover">
-                            <tr>
-                                <td class="text-center">X Kategori</td>
-                                <td class="text-center">Gri Parça</td>
-                                <td class="text-center">564652</td>
-                                <td class="text-center">300₺</td>
-                                <td class="text-center">
-                                    <img src="/Content/images/img/0ce81fdd4dae4607841338a5def51158_44.png"
-                                         width="40%">
-                                </td>
-                                <td class="text-center">500</td>
-                                <td class="text-center">5</td>
-                                <td class="text-center">
-                                    <input type="number" class="form-control" id="inputIskonto"
-                                           placeholder="%" value="%10">
-                                </td>
-                                <td class="text-center"></td>
-                            </tr>
-                            <tr>
-                                <td class="text-center">X Kategori</td>
-                                <td class="text-center">Gri Parça</td>
-                                <td class="text-center">564652</td>
-                                <td class="text-center">300₺</td>
-                                <td class="text-center">
-                                    <img src="/Content/images/img/0ce81fdd4dae4607841338a5def51158_44.png"
-                                         width="40%">
-                                </td>
-                                <td class="text-center">500</td>
-                                <td class="text-center">5</td>
-                                <td class="text-center">
-                                    <input type="number" class="form-control" id="inputIskonto"
-                                           placeholder="%" value="%10">
-                                </td>
-                                <td class="text-center"></td>
-                            </tr>
-                            <tr>
-                                <td class="text-center">X Kategori</td>
-                                <td class="text-center">Gri Parça</td>
-                                <td class="text-center">564652</td>
-                                <td class="text-center">300₺</td>
-                                <td class="text-center">
-                                    <img src="/Content/images/img/0ce81fdd4dae4607841338a5def51158_44.png"
-                                         width="40%">
-                                </td>
-                                <td class="text-center">500</td>
-                                <td class="text-center">5</td>
-                                <td class="text-center">
-                                    <input type="number" class="form-control" id="inputIskonto"
-                                           placeholder="%" value="%10">
-                                </td>
-                                <td class="text-center"></td>
-                            </tr>
-                            <tr>
-                                <td class="text-center">X Kategori</td>
-                                <td class="text-center">Gri Parça</td>
-                                <td class="text-center">564652</td>
-                                <td class="text-center">300₺</td>
-                                <td class="text-center">
-                                    <img src="/Content/images/img/0ce81fdd4dae4607841338a5def51158_44.png"
-                                         width="40%">
-                                </td>
-                                <td class="text-center">500</td>
-                                <td class="text-center">5</td>
-                                <td class="text-center">
-                                    <input type="number" class="form-control" id="inputIskonto"
-                                           placeholder="%" value="%10">
-                                </td>
-                                <td class="text-center"></td>
-                            </tr>
-                            <tr>
-                                <td class="text-center">X Kategori</td>
-                                <td class="text-center">Gri Parça</td>
-                                <td class="text-center">564652</td>
-                                <td class="text-center">300₺</td>
-                                <td class="text-center">
-                                    <img src="/Content/images/img/0ce81fdd4dae4607841338a5def51158_44.png"
-                                         width="40%">
-                                </td>
-                                <td class="text-center">500</td>
-                                <td class="text-center">5</td>
-                                <td class="text-center">
-                                    <input type="number" class="form-control" id="inputIskonto"
-                                           placeholder="%" value="%10">
-                                </td>
-                                <td class="text-center"></td>
-                            </tr>
-                            <tr>
-                                <td class="text-center">X Kategori</td>
-                                <td class="text-center">Gri Parça</td>
-                                <td class="text-center">564652</td>
-                                <td class="text-center">300₺</td>
-                                <td class="text-center">
-                                    <img src="/Content/images/img/0ce81fdd4dae4607841338a5def51158_44.png"
-                                         width="40%">
-                                </td>
-                                <td class="text-center">500</td>
-                                <td class="text-center">5</td>
-                                <td class="text-center">
-                                    <input type="number" class="form-control" id="inputIskonto"
-                                           placeholder="%" value="%10">
-                                </td>
-                                <td class="text-center"></td>
-                            </tr>
-
+                        <tbody class="table-hover" id="productList">
+                           
                         </tbody>
                     </table>
 
@@ -290,42 +181,7 @@
                                             <td>%10</td>
                                             <td>400₺</td>
                                         </tr>
-                                        <tr>
-                                            <td style="font-weight: bold;">Demir Çelik</td>
-                                            <td>56421</td>
-                                            <td>3</td>
-                                            <td>%20</td>
-                                            <td>500₺</td>
-                                            <td>%10</td>
-                                            <td>400₺</td>
-                                        </tr>
-                                        <tr>
-                                            <td style="font-weight: bold;">Demir Çelik</td>
-                                            <td>56421</td>
-                                            <td>3</td>
-                                            <td>%20</td>
-                                            <td>500₺</td>
-                                            <td>%10</td>
-                                            <td>400₺</td>
-                                        </tr>
-                                        <tr>
-                                            <td style="font-weight: bold;">Demir Çelik</td>
-                                            <td>56421</td>
-                                            <td>3</td>
-                                            <td>%20</td>
-                                            <td>500₺</td>
-                                            <td>%10</td>
-                                            <td>400₺</td>
-                                        </tr>
-                                        <tr>
-                                            <td style="font-weight: bold;">Demir Çelik</td>
-                                            <td>56421</td>
-                                            <td>3</td>
-                                            <td>%20</td>
-                                            <td>500₺</td>
-                                            <td>%10</td>
-                                            <td>400₺</td>
-                                        </tr>
+
                                         <tr>
                                             <td colspan="5">&nbsp;</td>
                                             <td><strong>Toplam Fiyat</strong></td>
@@ -395,3 +251,44 @@
         </form>
     </div>
 </div>
+
+
+<script>
+    //Müşterilerin İletişim kişilerini getirme
+    function getContactPersonList() {
+        let customerId = $("#customers").val();
+        $.ajax({
+            type: "GET",
+            url: "/Offer/ContactPersons?id=" + customerId,
+            success: function (data) {
+                $("#contactPersonList").html(data);
+            }
+        });
+    }
+</script>
+
+<script>
+    function getCategories() {
+        let categoryId = $("#categoryId").val();
+        $.ajax({
+            type: "GET",
+            url: "/Offer/GetProducts?id=" + categoryId,
+            success: function(result){
+                $("#productList").html(result);
+            }
+        });
+    }
+
+
+    
+</script>
+
+<script>
+    function GoNext(a) {
+        if (a == 1) {
+            $("fieldset").hide();
+            $("fieldset")[a].style.display = "block";
+            
+        }
+    }
+</script>

@@ -10,5 +10,6 @@ namespace TeklifPanel.Business.Abstract
     public interface ICategoryService : IService<Category>
     {
         Task<List<Category>> GetCategoriesAsync(int companyd);
+        Task<bool> DeleteCategoryAsync(int companyd);
     }
 }

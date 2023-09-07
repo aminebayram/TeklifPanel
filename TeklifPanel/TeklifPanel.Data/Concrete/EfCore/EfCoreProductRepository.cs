@@ -18,6 +18,19 @@ namespace TeklifPanel.Data.Concrete.EfCore
             get { return _dbContext as TeklifPanelContext; }
         }
 
+        public async Task<bool> DeleteProductAsync(int productId)
+        {
+            var product = await context.Products
+                .Include(p => p.ProductImages)
+                .SingleOrDefaultAsync(p => p.Id == productId);
+
+            context.ProductImages.RemoveRange(product.ProductImages);
+
+            context.Remove(product);
+            var result = await context.SaveChangesAsync();
+            return result > 0 ? true : false;
+        }
+
         public async Task<List<Product>> GetCompanyProductsAsync(int companyId)
         {
             var productList = await context.Products
@@ -25,6 +38,15 @@ namespace TeklifPanel.Data.Concrete.EfCore
                 .Include(p => p.ProductImages)
                 .ToListAsync();
             return productList;
+        }
+
+        public async Task<Product> GetProductByIdAsync(int productId)
+        {
+            var product = await context.Products
+                .Where(p => p.Id == productId).
+                Include(p => p.ProductImages)
+                .FirstOrDefaultAsync();
+            return product;
         }
 
         public async Task<List<Product>> GetProductsByCategoryAsync(int companyId, int categoryId)

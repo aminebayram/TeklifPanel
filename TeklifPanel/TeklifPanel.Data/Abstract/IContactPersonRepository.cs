@@ -9,5 +9,7 @@ namespace TeklifPanel.Data.Abstract
 {
     public interface IContactPersonRepository : IRepository<CustomerContact>
     {
+        Task<List<CustomerContact>> GetCustomerContacts(int companyId, int customerId);
+
     }
 }

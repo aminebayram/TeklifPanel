@@ -1,21 +1,34 @@
-﻿
-      <div class="container musteri">
-        <form>
-          <div class="form-row row">
-            <div class="form-group col-lg-4 col-md-4 col-12">
-              <label for="inputName">Kategori Adı</label>
-              <input type="text" class="form-control" id="inputName" placeholder="Ad">
-            </div>
-            <div class="form-group col-lg-4 col-md-4 col-12">
-              <label for="inputPTel">Kategori Bazlı Kdv Oranı</label>
-              <input type="number" class="form-control" id="inputTel" placeholder="%">
-            </div>
-            <div class="form-group col-lg-4 col-md-4 col-12">
-              <label for="inputPTel">Kategori Bazlı Kur</label>
-              <input type="number" class="form-control" id="inputTel" placeholder="$">
-            </div>
-          </div>
+﻿@model CategoryModel
 
-          <button type="submit" class="btn btn-primary">Kategoriyi Güncelle</button>
-        </form>
-      </div>
+@if (TempData["Message"] != null)
+{
+    <div class="alert alert-success alert-dismissible fade show" role="alert">
+        <strong>Başarılı!</strong> @TempData["Message"]
+        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+    </div>
+}
+@if (TempData["Error"] != null)
+{
+    <div class="alert alert-danger alert-dismissible fade show" role="alert">
+        <strong>HATA!</strong> @TempData["Error"]
+        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+    </div>
+}
+
+<div class="container musteri">
+    <form asp-controller="Category" asp-action="UpdateCategory" method="post">
+        <input type="hidden" value="@Model.Id"/>
+        <div class="form-row row">
+            <div class="form-group col-lg-4 col-md-4 col-12">
+                <label for="inputName">Kategori Adı</label>
+                <input type="text" class="form-control" id="inputName" placeholder="Ad" asp-for="Name" value="@Model.Name">
+            </div>
+            <div class="form-group col-lg-4 col-md-4 col-12">
+                <label for="inputPTel">Kategori Açıklama</label>
+                <input type="text" class="form-control" id="inputTel" placeholder="Açıklama" asp-for="Details" value="@Model.Name">
+            </div>
+        </div>
+
+        <button type="submit" class="btn btn-primary">Kategoriyi Güncelle</button>
+    </form>
+</div>

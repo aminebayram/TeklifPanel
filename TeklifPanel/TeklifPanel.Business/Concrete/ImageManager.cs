@@ -5,12 +5,20 @@ using System.Linq.Expressions;
 using System.Text;
 using System.Threading.Tasks;
 using TeklifPanel.Business.Abstract;
+using TeklifPanel.Data.Abstract;
 using TeklifPanel.Entity;
 
 namespace TeklifPanel.Business.Concrete
 {
     public class ImageManager : IImageService
     {
+        private readonly IImageRepository _imageRepository;
+
+        public ImageManager(IImageRepository imageRepository)
+        {
+            _imageRepository = imageRepository;
+        }
+
         public void Create(ProductImage entity)
         {
             throw new NotImplementedException();
@@ -26,9 +34,9 @@ namespace TeklifPanel.Business.Concrete
             throw new NotImplementedException();
         }
 
-        public Task<bool> DeleteAsync(ProductImage entity)
+        public async Task<bool> DeleteAsync(ProductImage entity)
         {
-            throw new NotImplementedException();
+            return await _imageRepository.DeleteAsync(entity);
         }
 
         public ProductImage GetById(int id)
@@ -36,9 +44,9 @@ namespace TeklifPanel.Business.Concrete
             throw new NotImplementedException();
         }
 
-        public Task<ProductImage> GetByIdAsync(int id)
+        public async Task<ProductImage> GetByIdAsync(int id)
         {
-            throw new NotImplementedException();
+            return await _imageRepository.GetByIdAsync(id);
         }
 
         public Task<ICollection<ProductImage>> GetManyAsync(Expression<Func<ProductImage, bool>> expression)
@@ -51,9 +59,9 @@ namespace TeklifPanel.Business.Concrete
             throw new NotImplementedException();
         }
 
-        public Task<bool> UpdateAsync(ProductImage entity)
+        public async Task<bool> UpdateAsync(ProductImage entity)
         {
-            throw new NotImplementedException();
+            return await _imageRepository.UpdateAsync(entity);
         }
 
         Task<ICollection<ProductImage>> IService<ProductImage>.GetAll()

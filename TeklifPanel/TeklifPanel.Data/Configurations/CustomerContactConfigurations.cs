@@ -18,6 +18,10 @@ namespace TeklifPanel.Data.Configurations
                 .HasForeignKey(cc => cc.CustomerId)
                 .OnDelete(DeleteBehavior.NoAction);
 
+            builder.HasOne(cc => cc.Company)
+                .WithMany(c => c.CustomerContacts)
+                .HasForeignKey(cc => cc.CompanyId)
+                .OnDelete(DeleteBehavior.NoAction);
         }
     }
 }

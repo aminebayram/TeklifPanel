@@ -6,9 +6,8 @@ using System.Threading.Tasks;
 
 namespace TeklifPanel.Entity
 {
-    public class CustomerContact
+    public class CustomerContact : BaseEntity
     {
-        public int Id { get; set; }
         public string Name { get; set; }
         public string Email { get; set; }
         public string Department { get; set; }
@@ -16,5 +15,6 @@ namespace TeklifPanel.Entity
         public Customer Customer { get; set; }
         public int CustomerId { get; set; }
         public List<Offer> Offers { get; set; }
+        public int CompanyId { get; set; }
     }
 }

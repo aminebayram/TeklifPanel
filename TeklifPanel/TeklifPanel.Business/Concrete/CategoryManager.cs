@@ -39,6 +39,11 @@ namespace TeklifPanel.Business.Concrete
             return await _categoryRepository.DeleteAsync(entity);
         }
 
+        public async Task<bool> DeleteCategoryAsync(int companyd)
+        {
+            return await _categoryRepository.DeleteCategoryAsync(companyd);
+        }
+
         public Category GetById(int id)
         {
             throw new NotImplementedException();

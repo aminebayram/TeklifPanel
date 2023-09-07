@@ -761,3 +761,8 @@ td.text-left img {
 .silmebuton{
     margin-top: 16%;
 }
+
+td.text-center img {
+    width: 200px;
+    height: 189px;
+}

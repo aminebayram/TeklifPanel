@@ -38,6 +38,11 @@ namespace TeklifPanel.Business.Concrete
             return await _productRepository.DeleteAsync(entity);
         }
 
+        public async Task<bool> DeleteProductAsync(int productId)
+        {
+            return await _productRepository.DeleteProductAsync(productId);
+        }
+
         public Product GetById(int id)
         {
             throw new NotImplementedException();
@@ -56,6 +61,11 @@ namespace TeklifPanel.Business.Concrete
         public Task<ICollection<Product>> GetManyAsync(Expression<Func<Product, bool>> expression)
         {
             throw new NotImplementedException();
+        }
+
+        public async Task<Product> GetProductByIdAsync(int productId)
+        {
+            return await _productRepository.GetProductByIdAsync(productId);
         }
 
         public async Task<List<Product>> GetProductsByCategoryAsync(int companyId, int categoryId)

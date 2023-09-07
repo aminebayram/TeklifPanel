@@ -9,5 +9,6 @@ namespace TeklifPanel.Business.Abstract
 {
     public interface IContactPersonService : IService<CustomerContact>
     {
+        Task<List<CustomerContact>> GetCustomerContacts(int companyId, int customerId);
     }
 }

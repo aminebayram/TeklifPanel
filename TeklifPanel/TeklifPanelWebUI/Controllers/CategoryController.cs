@@ -62,5 +62,60 @@ namespace TeklifPanelWebUI.Controllers
         {
             return View();
         }
+
+        public async Task<IActionResult> DeleteCategory(int id)
+        {
+            var category = await _categoryService.GetByIdAsync(id);
+            var isDeletedCategory = await _categoryService.DeleteCategoryAsync(id);
+            if (isDeletedCategory)
+            {
+                TempData["Message"] = $"'{category.Name}' adlı ürün silindi";
+                return RedirectToAction("CategoryList");
+            }
+            TempData["Error"] = $"'{category.Name}' adlı ürün silininedi";
+            return RedirectToAction("CategoryList");
+        }
+
+        [HttpGet]
+        public async Task<IActionResult> UpdateCategory(int id)
+        {
+            var category = await _categoryService.GetByIdAsync(id);
+            var categoryModel = new CategoryModel()
+            {
+                Id = id,
+                Name = category.Name,
+                Details = category.Details,
+                
+            };
+            return View(categoryModel);
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> UpdateCategory(CategoryModel categoryModel)
+        {
+            var companyId = HttpContext.Session.GetInt32("CompanyId") ?? default;
+
+            if (ModelState.IsValid)
+            {
+                var category = new Category()
+                {
+                    Name = categoryModel.Name,
+                    Id = categoryModel.Id,
+                    Details = categoryModel.Details,
+                    Url = Jobs.MakeUrl(categoryModel.Name),
+                    CompanyId = companyId,
+                };
+                var isUpdateCategory = await _categoryService.UpdateAsync(category);
+                if (isUpdateCategory)
+                {
+                    TempData["Message"] = $"'{category.Name}' adlı ürün güncellendi";
+                    return RedirectToAction("CategoryList");
+                }
+                TempData["Error"] = $"'{category.Name}' adlı ürün güncellenemedi!";
+                return RedirectToAction("CategoryList");
+            }
+            TempData["Error"] = $"Eksik bilgileri doldurun!";
+            return RedirectToAction("CategoryList");
+        }
     }
 }

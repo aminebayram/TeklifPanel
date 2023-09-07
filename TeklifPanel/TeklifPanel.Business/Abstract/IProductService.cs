@@ -12,5 +12,7 @@ namespace TeklifPanel.Business.Abstract
     {
         Task<List<Product>> GetCompanyProductsAsync(int companyId);
         Task<List<Product>> GetProductsByCategoryAsync(int companyId, int categoryId);
+        Task<Product> GetProductByIdAsync(int productId);
+        Task<bool> DeleteProductAsync(int productId);
     }
 }

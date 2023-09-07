@@ -1,0 +1,30 @@
+﻿@{
+    Layout = null;
+}
+@model List<Product>
+
+@foreach (var product in Model)
+{
+    <tr>
+        <td class="text-center">Kategori gelecek</td>
+        <td class="text-center">@product.Name</td>
+        <td class="text-center">@product.Code</td>
+        <td class="text-center">@product.SellPrice₺</td>
+        <td class="text-center">
+            @foreach (var image in product.ProductImages)
+            {
+                <img src="@Jobs.ImageRoute@product.CompanyId/@image.Url"
+                     width="40%">
+            }
+        </td>
+        <td class="text-center">@product.Stock</td>
+        <td class="text-center">
+            <input type="number" class="form-control" placeholder="Adet">
+        </td>
+        <td class="text-center">
+            <input type="number" class="form-control" id="inputIskonto"
+                   placeholder="%"  value="%">
+        </td>
+        <td class="text-center"></td>
+    </tr>
+}

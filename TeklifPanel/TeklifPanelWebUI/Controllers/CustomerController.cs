@@ -160,6 +160,19 @@ namespace TeklifPanelWebUI.Controllers
             return RedirectToAction("CustomerList");
         }
 
+        public async Task<IActionResult> DeleteCustomer(int id)
+        {
+            var customer = await _customerService.GetByIdAsync(id);
+            var isCustomerDelete = await _customerService.DeleteCustomerAsync(id);
+            if (isCustomerDelete)
+            {
+                TempData["Message"] = $"'{customer.Name}' adlı müşteri silindi";
+                return RedirectToAction("CustomerList");
+            }
+            TempData["Error"] = $"'{customer.Name}' adlı müşteri silinemedi";
+            return RedirectToAction("CustomerList");
+        }
+
         public async Task<IActionResult> ContactPersonDelete(int id)
         {
             var contactPerson = await _contactPersonService.GetByIdAsync(id);

@@ -12,7 +12,7 @@ namespace TeklifPanel.Data.Abstract
         Task<ICollection<Customer>> GetCompanyByCustomersAsync(int companyId);
         Task<Customer> GetCustomerAsync(int customerId);
         Task<bool> UpdateCustomerAsync(Customer customer);
-
+        Task<bool> DeleteCustomerAsync(int customerId);
 
     }
 }

@@ -16,5 +16,13 @@ namespace TeklifPanel.Data.Concrete.EfCore
         {
             get { return _dbContext as TeklifPanelContext; }
         }
+
+        public async Task<List<CustomerContact>> GetCustomerContacts(int companyId, int customerId)
+        {
+            var contactPersonList = await context.CustomerContacts
+                .Where(c => c.CustomerId == customerId && c.CompanyId == companyId)
+                .ToListAsync();
+            return contactPersonList;
+        }
     }
 }

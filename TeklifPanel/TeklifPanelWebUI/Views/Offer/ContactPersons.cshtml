@@ -1,0 +1,12 @@
+﻿@{
+    Layout = null;
+}
+@model List<CustomerContact>
+
+<label for="contactPersons" class="fieldlabels">Yetkiliyi Seçin:</label>
+<select id="contactPersons">
+    @foreach (var person in Model)
+    {
+        <option value="@person.Id">@person.Name</option>
+    }
+</select>

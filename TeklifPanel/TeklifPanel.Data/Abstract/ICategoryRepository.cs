@@ -10,6 +10,7 @@ namespace TeklifPanel.Data.Abstract
     public interface ICategoryRepository : IRepository<Category>
     {
         Task<List<Category>> GetCategoriesAsync(int companyd);
+        Task<bool> DeleteCategoryAsync(int companyd);
 
     }
 }

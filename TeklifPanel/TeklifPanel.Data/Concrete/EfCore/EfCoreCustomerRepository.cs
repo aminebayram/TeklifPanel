@@ -17,6 +17,17 @@ namespace TeklifPanel.Data.Concrete.EfCore
             get { return _dbContext as TeklifPanelContext; }
         }
 
+        public async Task<bool> DeleteCustomerAsync(int customerId)
+        {
+            var customer = await context.Customers
+                .Include(c => c.CustomerContacts)
+                .SingleOrDefaultAsync(c => c.Id == customerId);
+            context.CustomerContacts.RemoveRange(customer.CustomerContacts);
+            context.Remove(customer);
+            var result = await context.SaveChangesAsync();
+            return result > 0 ? true : false;
+        }
+
         public async Task<ICollection<Customer>> GetCompanyByCustomersAsync(int companyId)
         {
             var customerList = await context.Customers

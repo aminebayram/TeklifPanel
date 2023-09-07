@@ -18,6 +18,7 @@ namespace TeklifPanel.Entity
             Logs = new List<Log>();
             Users = new List<User>();
             Ibans = new List<Iban>();
+            CustomerContacts = new List<CustomerContact>();
         }
         public int Id { get; set; }
         public string Name { get; set; }
@@ -31,5 +32,6 @@ namespace TeklifPanel.Entity
         public List<Log> Logs { get; set; }
         public List<User> Users { get; set; }
         public List<Iban> Ibans { get; set; }
+        public List<CustomerContact> CustomerContacts { get; set; }
     }
 }

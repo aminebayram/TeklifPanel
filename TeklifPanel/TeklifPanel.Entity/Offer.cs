@@ -25,7 +25,6 @@ namespace TeklifPanel.Entity
         public decimal? SellPrice { get; set; }
         public decimal? KDV { get; set; }
         public DateTime DateOfOffer { get; set; }
-
         public Customer Customer { get; set; }
         public int CustomerId { get; set; }
         public Address Address { get; set; }

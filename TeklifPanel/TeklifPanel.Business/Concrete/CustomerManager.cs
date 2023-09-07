@@ -39,6 +39,11 @@ namespace TeklifPanel.Business.Concrete
             throw new NotImplementedException();
         }
 
+        public async Task<bool> DeleteCustomerAsync(int customerId)
+        {
+            return await _customerRepository.DeleteCustomerAsync(customerId);
+        }
+
         public Customer GetById(int id)
         {
             throw new NotImplementedException();
