@@ -23,7 +23,6 @@
 
   <ItemGroup>
     <Folder Include="wwwroot\Content\images\C21\" />
-    <Folder Include="wwwroot\images\C21\" />
   </ItemGroup>
 
 </Project>
