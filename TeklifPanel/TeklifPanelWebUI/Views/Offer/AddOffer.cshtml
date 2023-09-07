@@ -14,7 +14,7 @@
                 <div class="progress-bar progress-bar-striped progress-bar-animated" role="progressbar" aria-valuemin="0"
                      aria-valuemax="100"></div>
             </div>
-            <br> <!-- fieldsets -->
+            <!-- fieldsets -->
 
             <fieldset>
                 <div class="form-card">
@@ -39,12 +39,12 @@
                         <label for="contactPersons" class="fieldlabels">Yetkiliyi Seçin:</label>
                         <select id="contactPersons">
                             <option>Seçiniz</option>
+                            @* PartialView ContackPerson *@
                         </select>
                     </div>
-
                 </div>
 
-                <input type="button" name="next" class="next action-button" onclick="GoNext(1)" value="İLERİ" />
+                <input type="button" name="next" class="next action-button" value="İLERİ" />
 
             </fieldset>
 
@@ -85,7 +85,7 @@
                             </tr>
                         </thead>
                         <tbody class="table-hover" id="productList">
-                           
+                           @* PartialView - GetProducts *@
                         </tbody>
                     </table>
 
@@ -157,7 +157,7 @@
 
                         <div class="row">
                             <div class="span8 well invoice-body">
-                                <br>
+                                
                                 <table class="table table-bordered">
                                     <thead>
                                         <tr>
