@@ -7,5 +7,6 @@
         public string Details { get; set; }
         public string Url { get; set; }
         public int CompanyId { get; set; }
+        public decimal KDV { get; set; }
     }
 }

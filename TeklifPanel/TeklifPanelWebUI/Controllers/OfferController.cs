@@ -47,11 +47,37 @@ namespace TeklifPanelWebUI.Controllers
 
         }
 
-        public async Task<IActionResult> GetProducts(int id)
+        public async Task<IActionResult> GetProducts(int id, int customerId)
         {
             var companyId = HttpContext.Session.GetInt32("CompanyId") ?? default;
             var productList = await _productService.GetProductsByCategoryAsync(companyId, id);
-            return View(productList);
+            var customer = await _customerService.GetByIdAsync(customerId);
+            var category = await _categoryService.GetByIdAsync(id);
+
+            var productViewModel = new List<ProductViewModel>();
+            foreach (var product in productList)
+            {
+                productViewModel.Add(new ProductViewModel()
+                {
+                    Code = product.Code,
+                    Name = product.Name,
+                    SellPrice = product.SellPrice,
+                    Detail = product.Detail,
+                    Stock = product.Stock,
+                    Discount = customer.Discount,
+                    Images = product.ProductImages.Select(p => p.Url).ToList(),
+                    CompanyId = product.CompanyId,
+                   CategoryName = category.Name
+                });
+
+            }
+
+            return View(productViewModel);
+        }
+
+        public IActionResult OfferPreview()
+        {
+            return View();
         }
     }
 }

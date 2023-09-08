@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using TeklifPanel.Data.Concrete.EfCore;
 
@@ -11,9 +12,11 @@ using TeklifPanel.Data.Concrete.EfCore;
 namespace TeklifPanel.Data.Migrations
 {
     [DbContext(typeof(TeklifPanelContext))]
-    partial class TeklifPanelContextModelSnapshot : ModelSnapshot
+    [Migration("20230908054541_ProductAddDiscount")]
+    partial class ProductAddDiscount
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -196,8 +199,8 @@ namespace TeklifPanel.Data.Migrations
                     b.Property<string>("Details")
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<decimal>("KDV")
-                        .HasColumnType("decimal(18,2)");
+                    b.Property<int>("KDV")
+                        .HasColumnType("int");
 
                     b.Property<string>("Name")
                         .HasColumnType("nvarchar(max)");

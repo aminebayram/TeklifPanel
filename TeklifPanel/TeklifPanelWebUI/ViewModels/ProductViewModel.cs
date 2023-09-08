@@ -10,10 +10,14 @@ namespace TeklifPanelWebUI.ViewModels
         public decimal? BuyPrice { get; set; }
         public decimal? SellPrice { get; set; }
         public int Stock { get; set; }
+        public int Amount { get; set; }
+        public bool IsSeleted { get; set; }
+        public decimal? Discount { get; set; }
         public string Detail { get; set; }
         public string Url { get; set; }
         public bool IsActive { get; set; }
         public int CategoryId { get; set; }
+        public string CategoryName { get; set; }
         public List<ProductOffer> ProductOffers { get; set; }
         public List<ProductImage> ProductImages { get; set; }
         public List<string> Images { get; set; }

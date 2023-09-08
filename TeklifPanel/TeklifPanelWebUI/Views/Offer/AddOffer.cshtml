@@ -27,8 +27,8 @@
                             <h2 class="steps">Adım 1 - 4</h2>
                         </div>
                     </div>
-                    <label for="customers" class="fieldlabels">Müşteri Seçin:</label>
-                    <select id="customers" onchange="getContactPersonList()">
+                    <label for="customerId" class="fieldlabels">Müşteri Seçin:</label>
+                    <select id="customerId" onchange="getContactPersonList()">
                         <option>Seçiniz</option>
                         @foreach (var customer in Model)
                         {
@@ -91,7 +91,7 @@
 
                 </div>
 
-                <input type="button" name="next" class="next action-button" value="İLERİ" />
+                <input type="button" id="nextButton" name="next" class="next action-button" value="İLERİ" />
                 <input type="button" name="previous" class="previous action-button-previous" value="GERİ" />
 
             </fieldset>
@@ -251,11 +251,11 @@
     </div>
 </div>
 
-
+@*Müşterilerin İletişim kişilerini getirme*@
 <script>
-    //Müşterilerin İletişim kişilerini getirme
+    
     function getContactPersonList() {
-        let customerId = $("#customers").val();
+        let customerId = $("#customerId").val();
         $.ajax({
             type: "GET",
             url: "/Offer/ContactPersons?id=" + customerId,
@@ -266,12 +266,18 @@
     }
 </script>
 
+@*Seçilen kategoriye göre gelecek ürünler*@
 <script>
     function getCategories() {
         let categoryId = $("#categoryId").val();
+        let selectedCustomerId = $('#customerId').val();
+
         $.ajax({
             type: "GET",
             url: "/Offer/GetProducts?id=" + categoryId,
+            data: {
+                customerId: selectedCustomerId,
+            },
             success: function(result){
                 $("#productList").html(result);
             }
@@ -279,6 +285,35 @@
     }
 </script>
 
+<script>
+    $(document).ready(function(){
+        $('#nextButton').on('click', function(){
+            let selectedCustomerId = $('#customerId').val();
+            let selectedContactPersonId = $('#contactPersons').val();
+            let selectedCategoryId = $('#categoryId').val();
+
+            if(selectedCustomerId !== 'Seçiniz' && selectedContactPersonId !== 'Seçiniz'){
+                $.ajax({
+                    url: '/Offer/OfferPreview',
+                    type:'POST',
+                    data:{
+                        customerId: selectedCustomerId,
+                        contactPersonId: selectedContactPersonId
+                    },
+                    success:function(data){
+                        alert('Bilgiler gitti')
+                    },
+                    error:function(){
+                        alert('GİTMEDİ')
+                    }
+                });
+            }
+        });
+    });
+    </script>
+
+
+@*İleri ve Geri Butonlarının aktivasyonu*@
 <script>
     $(document).ready(function () {
 

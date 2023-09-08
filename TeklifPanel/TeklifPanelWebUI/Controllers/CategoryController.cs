@@ -42,7 +42,8 @@ namespace TeklifPanelWebUI.Controllers
                     Name = categoryModel.Name,
                     Details = categoryModel.Details,
                     CompanyId = companyId,
-                    Url = Jobs.MakeUrl(categoryModel.Name)
+                    Url = Jobs.MakeUrl(categoryModel.Name),
+                    KDV = categoryModel.KDV,
                 };
                 var isCategoryAdd = await _categoryService.CreateAsync(category);
                 if (isCategoryAdd)
@@ -55,11 +56,6 @@ namespace TeklifPanelWebUI.Controllers
 
             }
             TempData["Error"] = $"Eksik Bilgiler var!";
-            return View();
-        }
-
-        public IActionResult UpdateCategory()
-        {
             return View();
         }
 
@@ -85,7 +81,7 @@ namespace TeklifPanelWebUI.Controllers
                 Id = id,
                 Name = category.Name,
                 Details = category.Details,
-                
+                KDV = category.KDV
             };
             return View(categoryModel);
         }
@@ -104,18 +100,20 @@ namespace TeklifPanelWebUI.Controllers
                     Details = categoryModel.Details,
                     Url = Jobs.MakeUrl(categoryModel.Name),
                     CompanyId = companyId,
+                    KDV = categoryModel.KDV
                 };
                 var isUpdateCategory = await _categoryService.UpdateAsync(category);
                 if (isUpdateCategory)
                 {
                     TempData["Message"] = $"'{category.Name}' adlı ürün güncellendi";
-                    return RedirectToAction("CategoryList");
+                    return RedirectToAction("UpdateCategory", new { id = categoryModel.Id });
                 }
                 TempData["Error"] = $"'{category.Name}' adlı ürün güncellenemedi!";
-                return RedirectToAction("CategoryList");
+                return RedirectToAction("UpdateCategory", new { id = categoryModel.Id });
             }
             TempData["Error"] = $"Eksik bilgileri doldurun!";
-            return RedirectToAction("CategoryList");
+            return RedirectToAction("UpdateCategory", new {id=categoryModel.Id});
+
         }
     }
 }

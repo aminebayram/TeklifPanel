@@ -26,6 +26,10 @@
         <label for="inputPTel">Kategori Açıklama</label>
         <input type="text" class="form-control" id="inputTel" placeholder="Açıklama" asp-for="Details">
       </div>
+            <div class="form-group col-lg-4 col-md-4 col-12">
+                <label for="inputPTel">Kategori Bazlı Kdv Oranı</label>
+                <input type="text" class="form-control" id="inputTel" placeholder="%" asp-for="KDV" pattern="[0-9]+(\,[0-9]+)?" title="Lütfen geçerli bir sayı girin (örneğin: 12 veya 12,5)">
+            </div>
     </div>
 
     <button type="submit" class="btn btn-primary">Kategoriyi Ekle</button>
