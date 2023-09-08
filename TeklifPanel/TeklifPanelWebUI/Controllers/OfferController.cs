@@ -10,6 +10,7 @@ namespace TeklifPanelWebUI.Controllers
         private readonly IProductService _productService;
         private readonly ICategoryService _categoryService;
         private readonly IContactPersonService _contactPersonService;
+        private readonly ICompanyService _companyService;
 
         public OfferController(ICustomerService customerService, IProductService productService, ICategoryService categoryService, IContactPersonService contactPersonService)
         {
@@ -33,6 +34,8 @@ namespace TeklifPanelWebUI.Controllers
         {
             var companyId = HttpContext.Session.GetInt32("CompanyId") ?? default;
             var customerList = await _customerService.GetCompanyByCustomersAsync(companyId);
+            var r = await _companyService.GetCompanyByIdAsync(companyId);
+            //ViewBag.Company = await _companyService.GetCompanyByIdAsync(companyId);
             ViewBag.Categories = await _categoryService.GetCategoriesAsync(companyId);
             return View(customerList);
         }
@@ -59,6 +62,7 @@ namespace TeklifPanelWebUI.Controllers
             {
                 productViewModel.Add(new ProductViewModel()
                 {
+                    Id = product.Id,
                     Code = product.Code,
                     Name = product.Name,
                     SellPrice = product.SellPrice,
@@ -67,7 +71,7 @@ namespace TeklifPanelWebUI.Controllers
                     Discount = customer.Discount,
                     Images = product.ProductImages.Select(p => p.Url).ToList(),
                     CompanyId = product.CompanyId,
-                   CategoryName = category.Name
+                    CategoryName = category.Name
                 });
 
             }

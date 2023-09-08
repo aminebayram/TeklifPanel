@@ -56,6 +56,13 @@
                             <h2 class="fs-title">Ürünler:</h2>
                         </div>
                         <div class="col-4">
+                        </div>
+                        <div class="col-4">
+                            <h2 class="steps">Adım 2 - 4</h2>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-8">
                             <label for="categoryId" class="fieldlabels">Kategori Seçin:</label>
                             <select id="categoryId" onchange="getCategories()">
                                 <option>Seçiniz</option>
@@ -64,31 +71,30 @@
                                     <option value="@category.Id">@category.Name</option>
                                 }
                             </select>
+                            <table class="table-fill">
+                                <thead>
+                                    <tr>
+                                        <th class="text-center">Kategori</th>
+                                        <th class="text-center">Ürün Adı</th>
+                                        <th class="text-center">Kod</th>
+                                        <th class="text-center">Fiyat</th>
+                                        <th class="text-center">Fotoğraf</th>
+                                        <th class="text-center">Stok</th>
+                                        @*<th class="text-center">Eklenecek Adet</th>*@
+                                        <th class="text-center">İskonto</th>
+                                        <th class="text-center">Ekle</th>
+                                    </tr>
+                                </thead>
+                                <tbody class="table-hover" id="productList">
+                                    @* PartialView - GetProducts *@
+                                </tbody>
+                            </table>
                         </div>
                         <div class="col-4">
-                            <h2 class="steps">Adım 2 - 4</h2>
+                            <div id="selectedProducts">
+                            </div>
                         </div>
                     </div>
-
-                    <table class="table-fill">
-                        <thead>
-                            <tr>
-                                <th class="text-center">Ürün Kategorisi</th>
-                                <th class="text-center">Ürün Adı</th>
-                                <th class="text-center">Ürün Kodu</th>
-                                <th class="text-center">Ürün Fiyatı</th>
-                                <th class="text-center">Ürün Fotoğrafı</th>
-                                <th class="text-center">Ürün Stok Adedi</th>
-                                <th class="text-center">Eklenecek Adet</th>
-                                <th class="text-center">İskonto</th>
-                                <th class="text-center">Ürün Seç/Kaldır</th>
-                            </tr>
-                        </thead>
-                        <tbody class="table-hover" id="productList">
-                           @* PartialView - GetProducts *@
-                        </tbody>
-                    </table>
-
                 </div>
 
                 <input type="button" id="nextButton" name="next" class="next action-button" value="İLERİ" />
@@ -113,7 +119,7 @@
                             <div class="span4">
                                 <img src="Content/images/logo/logo.png" class="mb-4">
                                 <address>
-                                    <strong>DEFNE BANYO LTD. ŞTİ.</strong><br>
+                                    <strong>@ViewBag.Company</strong><br>
                                     <p class="mt-4">
                                         Esenkent, Muhterem Sk No:56, 34776<br> Dudullu Osb/Ümraniye/İstanbul, Türkiye
                                     </p>
@@ -157,7 +163,7 @@
 
                         <div class="row">
                             <div class="span8 well invoice-body">
-                                
+
                                 <table class="table table-bordered">
                                     <thead>
                                         <tr>
@@ -236,13 +242,11 @@
                             <i class="fas fa-check"></i>
                         </div>
                     </div> <br><br>
-
                     <div class="row justify-content-center">
                         <div class="col-7 text-center">
                             <h5 class="purple-text text-center">TEKLİFİNİZ BAŞARIYLA İLETİLDİ!</h5>
                         </div>
                     </div>
-
                 </div>
 
             </fieldset>
@@ -253,7 +257,7 @@
 
 @*Müşterilerin İletişim kişilerini getirme*@
 <script>
-    
+
     function getContactPersonList() {
         let customerId = $("#customerId").val();
         $.ajax({
@@ -278,39 +282,99 @@
             data: {
                 customerId: selectedCustomerId,
             },
-            success: function(result){
+            success: function (result) {
                 $("#productList").html(result);
+                let list = $('.temp');
+                for (let i = 0; i < list.length; i++) {
+                    let id = list[i].value;
+                    if (document.getElementById('selectedDiv' + id) != undefined){
+                        $("#seletedItem"+id)[0].checked = true;
+                    }
+                }
             }
         });
     }
 </script>
 
+@*Ürün seçme*@
 <script>
-    $(document).ready(function(){
-        $('#nextButton').on('click', function(){
+    function isSelected(id) {
+        let checkBox = document.getElementById('seletedItem' + id);
+        if (checkBox.checked) {
+            let categoryName = $('.seletedItem' + id)[0].innerText;
+            let productName = $('.seletedItem' + id)[1].innerText;
+            let productDiscount = $('.seletedItem' + id)[2].value;
+            var contactHtml = `
+                            <div class=" mb-4" id="selectedDiv${id}">
+                                <div class="form-row row">
+                                    <div class="form-group col-lg-5 col-md-5 col-12">
+                                        <label >Ürün Kategori</label>
+                                        <label class="selectedDivItem${id}">${categoryName}</label>
+                                    </div>
+                                    <div class="form-group col-lg-5 col-md-5 col-12">
+                                        <label >Ürün Adı</label>
+                                            <label class="selectedDivItem${id}">${productName}</label>
+                                        </div>
+                                </div>
+                                <div class="form-row row">
+                                    <div class="form-group col-lg-5 col-md-5 col-12">
+                                        <label for="inputName">Adet</label>
+                                        <input type="number" class="form-control" name="Amount" placeholder="Adet" >
+                                    </div>
+                                    <div class="form-group col-lg-5 col-md-5 col-12">
+                                        <label>İskonto</label>
+                                                <input type="text" class="form-control" name="Discount" placeholder="İskonto" value="${productDiscount}" >
+                                    </div>
+                                    <div class="form-group col-lg-1 col-md-1 col-12">
+                                        <button class=" btn btn-danger  remove-contact" onclick="removeDiv(${id})" >Sil</button>
+                                    </div>
+                                </div>
+                            <hr />
+                            </div>
+                            `;
+            document.getElementById('selectedProducts').innerHTML += contactHtml;
+        }
+        else {
+            document.getElementById('selectedDiv' + id).remove();
+        }
+    }
+</script>
+
+@*Seçilen ürünü kaldırma*@
+<script>
+    function removeDiv(id) {
+        alert(id)
+        document.getElementById('selectedDiv' + id).remove();
+        document.getElementById('seletedItem' + id).checked = false;
+    }
+</script>
+
+<script>
+    $(document).ready(function () {
+        $('#nextButton').on('click', function () {
             let selectedCustomerId = $('#customerId').val();
             let selectedContactPersonId = $('#contactPersons').val();
             let selectedCategoryId = $('#categoryId').val();
 
-            if(selectedCustomerId !== 'Seçiniz' && selectedContactPersonId !== 'Seçiniz'){
+            if (selectedCustomerId !== 'Seçiniz' && selectedContactPersonId !== 'Seçiniz') {
                 $.ajax({
                     url: '/Offer/OfferPreview',
-                    type:'POST',
-                    data:{
+                    type: 'POST',
+                    data: {
                         customerId: selectedCustomerId,
                         contactPersonId: selectedContactPersonId
                     },
-                    success:function(data){
+                    success: function (data) {
                         alert('Bilgiler gitti')
                     },
-                    error:function(){
+                    error: function () {
                         alert('GİTMEDİ')
                     }
                 });
             }
         });
     });
-    </script>
+</script>
 
 
 @*İleri ve Geri Butonlarının aktivasyonu*@

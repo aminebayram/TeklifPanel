@@ -6,8 +6,11 @@
 @foreach (var product in Model)
 {
     <tr>
-        <td class="text-center" >@product.CategoryName</td>
-        <td class="text-center">@product.Name</td>
+        @{
+            string className = "seletedItem" + product.Id;
+        }
+        <td class="text-center @className" >@product.CategoryName</td>
+        <td class="text-center @className">@product.Name</td>
         <td class="text-center">@product.Code</td>
         <td class="text-center">@product.SellPrice₺</td>
         <td class="text-center">
@@ -17,15 +20,16 @@
             }
         </td>
         <td class="text-center">@product.Stock</td>
+@*        <td class="text-center">
+            <input type="number" class="form-control @className" placeholder="Adet">
+        </td>*@
         <td class="text-center">
-            <input type="number" class="form-control" placeholder="Adet">
-        </td>
-        <td class="text-center">
-            <input type="text" class="form-control" id="inputIskonto" placeholder="%" value="@product.Discount" name="Discount">
+            <input type="text" class="form-control @className" id="inputIskonto" placeholder="%" value="@product.Discount" name="Discount">
         </td>
         <td class="text-center">
             <div class="form-check form-switch">
-                <input  type="checkbox" name="IsActive">
+                <input id="@className" onchange="isSelected(@product.Id)" type="checkbox" name="IsSeleted">
+                <input type="hidden" class="temp" value="@product.Id">
             </div>
         </td>
     </tr>
