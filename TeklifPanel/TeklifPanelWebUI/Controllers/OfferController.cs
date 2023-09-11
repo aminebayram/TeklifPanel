@@ -12,12 +12,13 @@ namespace TeklifPanelWebUI.Controllers
         private readonly IContactPersonService _contactPersonService;
         private readonly ICompanyService _companyService;
 
-        public OfferController(ICustomerService customerService, IProductService productService, ICategoryService categoryService, IContactPersonService contactPersonService)
+        public OfferController(ICustomerService customerService, IProductService productService, ICategoryService categoryService, IContactPersonService contactPersonService, ICompanyService companyService)
         {
             _customerService = customerService;
             _productService = productService;
             _categoryService = categoryService;
             _contactPersonService = contactPersonService;
+            _companyService = companyService;
         }
 
         public IActionResult Index()
@@ -34,8 +35,7 @@ namespace TeklifPanelWebUI.Controllers
         {
             var companyId = HttpContext.Session.GetInt32("CompanyId") ?? default;
             var customerList = await _customerService.GetCompanyByCustomersAsync(companyId);
-            var r = await _companyService.GetCompanyByIdAsync(companyId);
-            //ViewBag.Company = await _companyService.GetCompanyByIdAsync(companyId);
+            ViewBag.Company = await _companyService.GetCompanyByIdAsync(companyId);
             ViewBag.Categories = await _categoryService.GetCategoriesAsync(companyId);
             return View(customerList);
         }
@@ -63,15 +63,15 @@ namespace TeklifPanelWebUI.Controllers
                 productViewModel.Add(new ProductViewModel()
                 {
                     Id = product.Id,
-                    Code = product.Code,
-                    Name = product.Name,
-                    SellPrice = product.SellPrice,
-                    Detail = product.Detail,
+                    Code = product?.Code,
+                    Name = product?.Name,
+                    SellPrice = product?.SellPrice,
+                    Detail = product?.Detail,
                     Stock = product.Stock,
-                    Discount = customer.Discount,
-                    Images = product.ProductImages.Select(p => p.Url).ToList(),
+                    Discount = customer?.Discount,
+                    Images = product?.ProductImages.Select(p => p.Url).ToList(),
                     CompanyId = product.CompanyId,
-                    CategoryName = category.Name
+                    CategoryName = category?.Name
                 });
 
             }
@@ -79,7 +79,7 @@ namespace TeklifPanelWebUI.Controllers
             return View(productViewModel);
         }
 
-        public IActionResult OfferPreview()
+        public IActionResult OfferPreview(List<string> content)
         {
             return View();
         }

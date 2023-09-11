@@ -20,12 +20,10 @@
             }
         </td>
         <td class="text-center">@product.Stock</td>
-@*        <td class="text-center">
-            <input type="number" class="form-control @className" placeholder="Adet">
-        </td>*@
-        <td class="text-center">
-            <input type="text" class="form-control @className" id="inputIskonto" placeholder="%" value="@product.Discount" name="Discount">
-        </td>
+        <td class="text-center @className">@product.Discount</td>
+@*         <td class="text-center">
+            <input type="text" class="form-control @className" id="inputIskonto" placeholder="%" value="@product.Discount" name="Discount" readonly>
+        </td> *@
         <td class="text-center">
             <div class="form-check form-switch">
                 <input id="@className" onchange="isSelected(@product.Id)" type="checkbox" name="IsSeleted">

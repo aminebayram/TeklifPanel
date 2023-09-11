@@ -21,7 +21,7 @@ namespace TeklifPanel.Data.Concrete.EfCore
         {
             var company = await context.Companies.Where(c => c.Id == id)
                 .Include(c => c.Ibans)
-                .FirstOrDefaultAsync();
+                .SingleOrDefaultAsync();
             return company;
         }
 

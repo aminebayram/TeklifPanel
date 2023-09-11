@@ -80,7 +80,6 @@
                                         <th class="text-center">Fiyat</th>
                                         <th class="text-center">Fotoğraf</th>
                                         <th class="text-center">Stok</th>
-                                        @*<th class="text-center">Eklenecek Adet</th>*@
                                         <th class="text-center">İskonto</th>
                                         <th class="text-center">Ekle</th>
                                     </tr>
@@ -119,7 +118,7 @@
                             <div class="span4">
                                 <img src="Content/images/logo/logo.png" class="mb-4">
                                 <address>
-                                    <strong>@ViewBag.Company</strong><br>
+                                    <strong>Defne Banyo</strong><br>
                                     <p class="mt-4">
                                         Esenkent, Muhterem Sk No:56, 34776<br> Dudullu Osb/Ümraniye/İstanbul, Türkiye
                                     </p>
@@ -133,7 +132,7 @@
                                     <strong>Teklif No:</strong> 2202
                                 </div>
                                 <div class="tarih mt-4">
-                                    <strong>Teklif Tarih:</strong> 22.02.20
+                                    <strong>Teklif Tarih:</strong>@DateTime.Now.ToShortDateString()
                                 </div>
                             </div>
                         </div>
@@ -303,36 +302,36 @@
         if (checkBox.checked) {
             let categoryName = $('.seletedItem' + id)[0].innerText;
             let productName = $('.seletedItem' + id)[1].innerText;
-            let productDiscount = $('.seletedItem' + id)[2].value;
-            var contactHtml = `
-                            <div class=" mb-4" id="selectedDiv${id}">
-                                <div class="form-row row">
-                                    <div class="form-group col-lg-5 col-md-5 col-12">
-                                        <label >Ürün Kategori</label>
-                                        <label class="selectedDivItem${id}">${categoryName}</label>
-                                    </div>
-                                    <div class="form-group col-lg-5 col-md-5 col-12">
-                                        <label >Ürün Adı</label>
-                                            <label class="selectedDivItem${id}">${productName}</label>
-                                        </div>
-                                </div>
-                                <div class="form-row row">
-                                    <div class="form-group col-lg-5 col-md-5 col-12">
-                                        <label for="inputName">Adet</label>
-                                        <input type="number" class="form-control" name="Amount" placeholder="Adet" >
-                                    </div>
-                                    <div class="form-group col-lg-5 col-md-5 col-12">
-                                        <label>İskonto</label>
-                                                <input type="text" class="form-control" name="Discount" placeholder="İskonto" value="${productDiscount}" >
-                                    </div>
-                                    <div class="form-group col-lg-1 col-md-1 col-12">
-                                        <button class=" btn btn-danger  remove-contact" onclick="removeDiv(${id})" >Sil</button>
-                                    </div>
-                                </div>
-                            <hr />
-                            </div>
-                            `;
-            document.getElementById('selectedProducts').innerHTML += contactHtml;
+            let productDiscount = $('.seletedItem' + id)[2].innerText;
+            var productHtml = `
+                <div class=" mb-4" id="selectedDiv${id}">
+                    <div class="form-row row">
+                        <div class="form-group col-lg-5 col-md-5 col-12">
+                            <label >Ürün Kategori</label>
+                            <label class="selectedDivItem${id}">${categoryName}</label>
+                        </div>
+                        <div class="form-group col-lg-5 col-md-5 col-12">
+                            <label >Ürün Adı</label>
+                            <label class="selectedDivItem${id}">${productName}</label>
+                        </div>
+                    </div>
+                    <div class="form-row row">
+                        <div class="form-group col-lg-5 col-md-5 col-12">
+                            <label for="inputName">Adet</label>
+                            <input type="number" class="form-control" name="Amount" placeholder="Adet" >
+                        </div>
+                        <div class="form-group col-lg-5 col-md-5 col-12">
+                            <label>İskonto</label>
+                            <input type="text" class="form-control" name="Discount" placeholder="İskonto" value="${productDiscount}" >
+                        </div>
+                        <div class="form-group col-lg-1 col-md-1 col-12">
+                            <button class=" btn btn-danger  remove-contact" onclick="removeDiv(${id})" >Sil</button>
+                        </div>
+                    </div>
+                <hr />
+                </div>
+                `;
+            document.getElementById('selectedProducts').innerHTML += productHtml;
         }
         else {
             document.getElementById('selectedDiv' + id).remove();
@@ -352,26 +351,15 @@
 <script>
     $(document).ready(function () {
         $('#nextButton').on('click', function () {
-            let selectedCustomerId = $('#customerId').val();
-            let selectedContactPersonId = $('#contactPersons').val();
-            let selectedCategoryId = $('#categoryId').val();
-
-            if (selectedCustomerId !== 'Seçiniz' && selectedContactPersonId !== 'Seçiniz') {
-                $.ajax({
-                    url: '/Offer/OfferPreview',
-                    type: 'POST',
-                    data: {
-                        customerId: selectedCustomerId,
-                        contactPersonId: selectedContactPersonId
-                    },
-                    success: function (data) {
-                        alert('Bilgiler gitti')
-                    },
-                    error: function () {
-                        alert('GİTMEDİ')
-                    }
-                });
-            }
+            let productList = [];
+            productList = document.getElementById('selectedProducts');
+            let postData = { content: productList };
+            
+            $.ajax({
+                type: 'POST',
+                url: '/Offer/OfferPreview',
+                data: postData
+            });
         });
     });
 </script>
