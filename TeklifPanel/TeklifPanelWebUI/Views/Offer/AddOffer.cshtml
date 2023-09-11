@@ -91,6 +91,7 @@
                         </div>
                         <div class="col-4">
                             <div id="selectedProducts">
+
                             </div>
                         </div>
                     </div>
@@ -254,6 +255,7 @@
     </div>
 </div>
 
+
 @*Müşterilerin İletişim kişilerini getirme*@
 <script>
 
@@ -286,8 +288,8 @@
                 let list = $('.temp');
                 for (let i = 0; i < list.length; i++) {
                     let id = list[i].value;
-                    if (document.getElementById('selectedDiv' + id) != undefined){
-                        $("#seletedItem"+id)[0].checked = true;
+                    if (document.getElementById('selectedDiv' + id) != undefined) {
+                        $("#seletedItem" + id)[0].checked = true;
                     }
                 }
             }
@@ -304,39 +306,54 @@
             let productName = $('.seletedItem' + id)[1].innerText;
             let productDiscount = $('.seletedItem' + id)[2].innerText;
             var productHtml = `
-                <div class=" mb-4" id="selectedDiv${id}">
-                    <div class="form-row row">
-                        <div class="form-group col-lg-5 col-md-5 col-12">
-                            <label >Ürün Kategori</label>
-                            <label class="selectedDivItem${id}">${categoryName}</label>
+                    <div class=" mb-4" id="selectedDiv${id}">
+                    <input type="hidden" id="id" value="${id} name="Id" />
+                        <div class="form-row row">
+                            <div class="form-group col-lg-5 col-md-5 col-12">
+                                <label >Ürün Kategori</label>
+                                <label class="selectedDivItem${id}">${categoryName}</label>
+                            </div>
+                            <div class="form-group col-lg-5 col-md-5 col-12">
+                                <label >Ürün Adı</label>
+                                <label class="selectedDivItem${id}">${productName}</label>
+                            </div>
                         </div>
-                        <div class="form-group col-lg-5 col-md-5 col-12">
-                            <label >Ürün Adı</label>
-                            <label class="selectedDivItem${id}">${productName}</label>
+                        <div class="form-row row">
+                            <div class="form-group col-lg-5 col-md-5 col-12">
+                                <label for="inputName">Adet</label>
+                                <input type="number" id="Amount" class="form-control" name="Amount" placeholder="Adet" >
+                            </div>
+                            <div class="form-group col-lg-5 col-md-5 col-12">
+                                <label>İskonto</label>
+                                <input type="text" id="Discount" class="form-control" name="Discount" placeholder="İskonto" value="${productDiscount}" >
+                            </div>
+                            <div class="form-group col-lg-1 col-md-1 col-12">
+                                <button class=" btn btn-danger  remove-contact" onclick="removeDiv(${id})" >Sil</button>
+                            </div>
                         </div>
+                    <hr />
                     </div>
-                    <div class="form-row row">
-                        <div class="form-group col-lg-5 col-md-5 col-12">
-                            <label for="inputName">Adet</label>
-                            <input type="number" class="form-control" name="Amount" placeholder="Adet" >
-                        </div>
-                        <div class="form-group col-lg-5 col-md-5 col-12">
-                            <label>İskonto</label>
-                            <input type="text" class="form-control" name="Discount" placeholder="İskonto" value="${productDiscount}" >
-                        </div>
-                        <div class="form-group col-lg-1 col-md-1 col-12">
-                            <button class=" btn btn-danger  remove-contact" onclick="removeDiv(${id})" >Sil</button>
-                        </div>
-                    </div>
-                <hr />
-                </div>
-                `;
+                    `;
             document.getElementById('selectedProducts').innerHTML += productHtml;
         }
         else {
             document.getElementById('selectedDiv' + id).remove();
         }
     }
+      
+    $('#nextBuuton').on('click', function () {
+        let idValue = document.getElementById('id').value;
+        let amountValue = document.getElementById('Amount').value;
+        let discountValue = document.getElementById('Discount').value;
+        let data = {
+            id = idValue,
+            amunt = amountValue,
+            discount = discountValue
+        };
+
+
+    })
+
 </script>
 
 @*Seçilen ürünü kaldırma*@
@@ -351,10 +368,7 @@
 <script>
     $(document).ready(function () {
         $('#nextButton').on('click', function () {
-            let productList = [];
-            productList = document.getElementById('selectedProducts');
-            let postData = { content: productList };
-            
+
             $.ajax({
                 type: 'POST',
                 url: '/Offer/OfferPreview',
