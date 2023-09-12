@@ -1,0 +1,130 @@
+﻿@model OfferViewModel
+@{
+    Layout = null;
+}
+<div class="d-flex" style="justify-content: space-between;">
+    <div class="span4">
+        <img src="@Jobs.ImageRoute@Model.Company.Id/@Model.CompanySettingsViewModel.Logo" class="mb-4">
+        <address>
+            <strong>@Model.Company.Name</strong><br>
+            <p class="mt-4">
+                @Model.CompanySettingsViewModel.Address
+            </p>
+        </address>
+    </div>
+    <div class="span4 well">
+        <div class="fatura-baslik">
+            ÖNİZLEME
+        </div>
+        <div class="fatura-no mt-4">
+            <strong>Teklif No:</strong> 2202
+        </div>
+        <div class="tarih mt-4">
+            <strong>Teklif Tarih:</strong>@DateTime.Now.ToShortDateString()
+        </div>
+    </div>
+</div>
+
+<hr class="my-4">
+
+<div class="musteri-bilgi">
+    <h5 class="musterifir">
+        @Model.Customer.Name
+    </h5>
+    <Strong>Sayın</Strong>
+    <p>Ebru Yılmaz</p>
+    <p class="adres">
+        @Model.Customer.OpenAddress
+    </p>
+    <div class="v-daire">
+        <strong>Vergi Dairesi</strong><br>
+        @Model.Customer.TaxOffice
+    </div>
+</div>
+<div class="row">
+    <div class="span8">
+        <hr>
+    </div>
+</div>
+
+<div class="row">
+    <div class="span8 well invoice-body">
+
+        <table class="table table-bordered">
+            <thead>
+                <tr>
+                    <th>Ürün Adı</th>
+                    <th>Ürün Kodu</th>
+                    <th>Ürün Adeti</th>
+                    <th>KDV</th>
+                    <th>Ürün Fiyatı</th>
+                    <th>İskonto</th>
+                    <th>İskontolu Fiyatı</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var product in Model.ProductsViewModel)
+                {
+                    <tr>
+                        @{
+                            var productDiscount = product.Discount;
+                            var productSellPrice = product.SellPrice;
+                            var discountPrice = product.Amount * productSellPrice * ((100 - productDiscount) / 100);
+                        }
+                        <td style="font-weight: bold;">@product.Name</td>
+                        <td>@product.Code</td>
+                        <td>@product.Amount</td>
+                        <td id="kdv">@product.KDV</td>
+                        <td id="sellPrice">@productSellPrice</td>
+                        <td id="discount">@productDiscount</td>
+                        <td id="discountPrice">@discountPrice</td>
+                    </tr>
+                }
+
+                <tr>
+                    <td colspan="5">&nbsp;</td>
+                    <td><strong>Toplam Fiyat</strong></td>
+                    <td id="totalPrice"><strong></strong></td>
+                </tr>
+                <tr>
+                    <td colspan="5">&nbsp;</td>
+                    <td><strong>İskontolu Fiyat</strong></td>
+                    <td id="totalDiscount"><strong></strong></td>
+                </tr>
+                <tr>
+                    <td colspan="5">&nbsp;</td>
+                    <td><strong>Toplam KDV</strong></td>
+                    <td id="totalKdv"><strong></strong></td>
+                </tr>
+                <tr>
+                    <td colspan="5">&nbsp;</td>
+                    <td><strong>Genel Toplam</strong></td>
+                    <td id="total"><strong></strong></td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+</div>
+<div class="fatura-not">
+    @Model.Customer.Note
+</div>
+
+<script>
+    $(document).ready(function () {
+        let kdvText = $('#kdv').text();
+        let replace_kdv = kdvText.replace(',', '.');
+        let kdv = parseFloat(replace_kdv); // parseFloat kullanarak sayıya dönüştürüyoruz
+
+        let sellPriceText = $('#sellPrice').text();
+        let replace_sellPrice = sellPriceText.replace(',', '.');
+        let sellPrice = parseFloat(replace_sellPrice);
+
+        let discountText = $('#discount').text();
+        let replace_discount = discountText.replace(',', '.');
+        let discount = parseFloat(replace_discount);
+
+        // Toplam fiyatı hesaplayıp 'totalPrice' elementine yazıyoruz
+        let totalPrice = sellPrice - discount;
+        $('#totalPrice').text(totalPrice.toFixed(2)); // İki ondalık basamaklı olarak yazdırıyoruz
+    });
+</script>

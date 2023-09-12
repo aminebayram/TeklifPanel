@@ -15,5 +15,6 @@ namespace TeklifPanel.Data.Abstract
         Task<Product> GetProductByIdAsync(int productId);
         Task<bool> DeleteProductAsync(int productId);
 
+
     }
 }

@@ -18,6 +18,7 @@ namespace TeklifPanelWebUI.ViewModels
         public bool IsActive { get; set; }
         public int CategoryId { get; set; }
         public string CategoryName { get; set; }
+        public decimal KDV { get; set; }
         public List<ProductOffer> ProductOffers { get; set; }
         public List<ProductImage> ProductImages { get; set; }
         public List<string> Images { get; set; }

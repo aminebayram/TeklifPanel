@@ -57,5 +57,6 @@ namespace TeklifPanel.Data.Concrete.EfCore
                 .ToListAsync();
             return productList;
         }
+
     }
 }

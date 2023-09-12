@@ -26,7 +26,7 @@ builder.Services.ConfigureApplicationCookie(options =>
     //options.LogoutPath = "/account/logout"; // çýkýþ yaptýktan sonra gidilecek sayfaya yönlendirir
     //options.AccessDeniedPath = "/account/accessdenied"; // yetkisiz giriþ sýrasýnda yönlendirilecek sayfa
     //options.SlidingExpiration = true; // çýkýþ için varsayýlan olan 20 dknýn her istekte sýfýrlanamsýný saðlýyoruz.
-    options.ExpireTimeSpan = TimeSpan.FromMinutes(10); // varsayýlan olan 20 dk lýk süreyi bu kod ile 10 dk süreye düþürür.
+    options.ExpireTimeSpan = TimeSpan.FromHours(10); // varsayýlan olan 20 dk lýk süreyi bu kod ile 10 dk süreye düþürür.
 
 });
 

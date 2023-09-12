@@ -6,13 +6,16 @@ namespace TeklifPanelWebUI.ViewModels
     {
         public string Pdf { get; set; }
         public string OrderNumber { get; set; } //Siparis Numarasi
-        public decimal? BuyPrice { get; set; }
         public decimal? SellPrice { get; set; }
         public decimal? KDV { get; set; }
-        public DateTime DateOfOffer { get; set; }
-        public int CustomerId { get; set; }
-        public int CustomerContactId { get; set; }
-        public List<int> Products { get; set; }
-
+        public string DateOfOffer { get; set; }
+        public string CustomerName { get; set; }
+        public string CustomerContactName{ get; set; }
+        public string CustomerAddress { get; set; }
+        public string CompanyName { get; set; }
+        public CompanySettingsViewModel CompanySettingsViewModel { get; set; }
+        public List<ProductViewModel> ProductsViewModel { get; set; }
+        public Company Company { get; set; }
+        public Customer Customer { get; set; }
     }
 }

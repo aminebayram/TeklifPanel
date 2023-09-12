@@ -43,6 +43,11 @@ namespace TeklifPanel.Business.Concrete
             return await _productRepository.DeleteProductAsync(productId);
         }
 
+        public Task<ICollection<Product>> GetAll()
+        {
+            throw new NotImplementedException();
+        }
+
         public Product GetById(int id)
         {
             throw new NotImplementedException();
@@ -81,11 +86,6 @@ namespace TeklifPanel.Business.Concrete
         public async Task<bool> UpdateAsync(Product entity)
         {
             return await _productRepository.UpdateAsync(entity);
-        }
-
-        Task<ICollection<Product>> IService<Product>.GetAll()
-        {
-            throw new NotImplementedException();
         }
 
         Task<Product> IService<Product>.GetById(int id)

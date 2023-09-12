@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using TeklifPanel.Business.Abstract;
+using TeklifPanel.Entity;
 using TeklifPanelWebUI.ViewModels;
 
 namespace TeklifPanelWebUI.Controllers
@@ -11,14 +12,16 @@ namespace TeklifPanelWebUI.Controllers
         private readonly ICategoryService _categoryService;
         private readonly IContactPersonService _contactPersonService;
         private readonly ICompanyService _companyService;
+        private readonly ICompanySettingsService _companySettingsService;
 
-        public OfferController(ICustomerService customerService, IProductService productService, ICategoryService categoryService, IContactPersonService contactPersonService, ICompanyService companyService)
+        public OfferController(ICustomerService customerService, IProductService productService, ICategoryService categoryService, IContactPersonService contactPersonService, ICompanyService companyService, ICompanySettingsService companySettingsService)
         {
             _customerService = customerService;
             _productService = productService;
             _categoryService = categoryService;
             _contactPersonService = contactPersonService;
             _companyService = companyService;
+            _companySettingsService = companySettingsService;
         }
 
         public IActionResult Index()
@@ -79,9 +82,57 @@ namespace TeklifPanelWebUI.Controllers
             return View(productViewModel);
         }
 
-        public IActionResult OfferPreview(List<string> content)
+        public async Task<IActionResult> OfferPreview(List<int> Amount, List<decimal> Discount, int CustomerId, List<int> Id, List<int> CategoryId)
         {
-            return View();
+            var companyId = HttpContext.Session.GetInt32("CompanyId") ?? default;
+            var company = await _companyService.GetByIdAsync(companyId);
+
+            var companySettings = await _companySettingsService.GetAllCompanySettingsAsync(companyId);
+
+            var customer = await _customerService.GetByIdAsync(CustomerId);
+
+            var selectecProductList = new List<ProductViewModel>();
+            for (int i = 0; i < Id.Count(); i++)
+            {
+                var selectedProduct = await _productService.GetProductByIdAsync(Id[i]);
+                var selectedCategory = await _categoryService.GetByIdAsync(CategoryId[i]);
+                selectecProductList.Add(new ProductViewModel()
+                {
+                    Code = selectedProduct?.Code,
+                    Name = selectedProduct?.Name,
+                    SellPrice = selectedProduct?.SellPrice,
+                    Amount = Amount[i],
+                    Discount = Discount[i],
+                    KDV = selectedCategory.KDV,
+                });
+            }
+            
+            CompanySettingsViewModel companySettingsViewModel = new CompanySettingsViewModel()
+            {
+                Id = companyId,
+                EmailAddress = company?.Email,
+                RecipientEmail = companySettings.Where(c => c.Parameter == "AliciEmail")?.FirstOrDefault().Value,
+                EmailServerPort = companySettings.Where(c => c.Parameter == "EmailSunucuPort")?.FirstOrDefault().Value,
+                EmailServer = companySettings.Where(c => c.Parameter == "EmailSunucu")?.FirstOrDefault().Value,
+                EmailUsername = companySettings.Where(c => c.Parameter == "EmailKullaniciAdi")?.FirstOrDefault().Value,
+                EmailPassword = companySettings.Where(c => c.Parameter == "EmailParola")?.FirstOrDefault().Value,
+                Logo = companySettings.Where(c => c.Parameter == "Logo")?.FirstOrDefault().Value,
+                Logo2 = companySettings.Where(c => c.Parameter == "Logo2")?.FirstOrDefault().Value,
+                PhoneNumber = companySettings.Where(c => c.Parameter == "TelNo")?.FirstOrDefault().Value,
+                FaxNumber = companySettings.Where(c => c.Parameter == "FaxNo")?.FirstOrDefault().Value,
+                Address = companySettings.Where(c => c.Parameter == "Adres")?.FirstOrDefault().Value,
+            };
+
+            var offerViewModel = new OfferViewModel()
+            {
+                CompanySettingsViewModel = companySettingsViewModel,
+                DateOfOffer = DateTime.Now.ToShortTimeString(),
+                ProductsViewModel = selectecProductList,
+                Company = company,
+                Customer = customer,
+            };
+
+            return View(offerViewModel);
         }
     }
 }
