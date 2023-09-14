@@ -98,6 +98,7 @@ namespace TeklifPanelWebUI.Controllers
                 var selectedCategory = await _categoryService.GetByIdAsync(CategoryId[i]);
                 selectecProductList.Add(new ProductViewModel()
                 {
+                    Id = selectedProduct.Id,
                     Code = selectedProduct?.Code,
                     Name = selectedProduct?.Name,
                     SellPrice = selectedProduct?.SellPrice,
@@ -133,6 +134,12 @@ namespace TeklifPanelWebUI.Controllers
             };
 
             return View(offerViewModel);
+        }
+
+        [HttpPost]
+        public IActionResult SendMail()
+        {
+            return View();
         }
     }
 }

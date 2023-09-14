@@ -67,17 +67,18 @@
                 {
                     <tr>
                         @{
+                            var id = product.Id;
                             var productDiscount = product.Discount;
                             var productSellPrice = product.SellPrice;
                             var discountPrice = product.Amount * productSellPrice * ((100 - productDiscount) / 100);
                         }
                         <td style="font-weight: bold;">@product.Name</td>
                         <td>@product.Code</td>
-                        <td>@product.Amount</td>
-                        <td id="kdv">@product.KDV</td>
-                        <td id="sellPrice">@productSellPrice</td>
-                        <td id="discount">@productDiscount</td>
-                        <td id="discountPrice">@discountPrice</td>
+                        <td id="amount-@id">@product.Amount</td>
+                        <td id="kdv-@id">@product.KDV</td>
+                        <td id="sellPrice-@id">@productSellPrice</td>
+                        <td id="discount-@id">@productDiscount</td>
+                        <td id="discountPrice-@id">@discountPrice</td>
                     </tr>
                 }
 
@@ -110,21 +111,42 @@
 </div>
 
 <script>
-    $(document).ready(function () {
-        let kdvText = $('#kdv').text();
-        let replace_kdv = kdvText.replace(',', '.');
-        let kdv = parseFloat(replace_kdv); // parseFloat kullanarak sayıya dönüştürüyoruz
+    var mdl = @Html.Raw(Json.Serialize(Model.ProductsViewModel));
+    let totalPrice = 0; // totalPrice'ı tanımlayın ve sıfıra başlatın
+    let totalDiscount = 0;
+    let totalKdv = 0;
 
-        let sellPriceText = $('#sellPrice').text();
+    for (let i = 0; i < mdl.length; i++) {
+        let productId = mdl[i].id;
+
+        let kdvText = $('#kdv-' + productId).text();
+        let replace_kdv = kdvText.replace(',', '.');
+        let kdv = parseFloat(replace_kdv);
+
+        let sellPriceText = $('#sellPrice-' + productId).text();
         let replace_sellPrice = sellPriceText.replace(',', '.');
         let sellPrice = parseFloat(replace_sellPrice);
 
-        let discountText = $('#discount').text();
+        let discountText = $('#discount-' + productId).text();
         let replace_discount = discountText.replace(',', '.');
         let discount = parseFloat(replace_discount);
 
-        // Toplam fiyatı hesaplayıp 'totalPrice' elementine yazıyoruz
-        let totalPrice = sellPrice - discount;
-        $('#totalPrice').text(totalPrice.toFixed(2)); // İki ondalık basamaklı olarak yazdırıyoruz
-    });
+        let amountText = $('#amount-' + productId).text();
+        let amount = parseFloat(amountText);
+
+        let discountPriceText = $('#discountPrice-' + productId).text();
+        let replace_discountPriceText = discountPriceText.replace(',', '.');
+        let discountPrice = parseFloat(replace_discountPriceText);
+
+        totalPrice = totalPrice + (sellPrice * amount);
+        totalDiscount += discountPrice;
+        totalKdv = (amount * sellPrice * (kdv / 100)) + totalKdv;
+        total = totalDiscount + totalKdv;
+    }
+
+    $('#totalPrice').text(totalPrice.toFixed(2)); // İki ondalık basamaklı olarak yazdırın
+    $('#totalDiscount').text(totalDiscount.toFixed(2));
+    $('#totalKdv').text(totalKdv.toFixed(2));
+    $('#total').text(total.toFixed(2));
+
 </script>
