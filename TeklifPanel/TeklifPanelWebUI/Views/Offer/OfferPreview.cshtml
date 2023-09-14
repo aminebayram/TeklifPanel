@@ -112,7 +112,7 @@
 
 <script>
     var mdl = @Html.Raw(Json.Serialize(Model.ProductsViewModel));
-    let totalPrice = 0; // totalPrice'ı tanımlayın ve sıfıra başlatın
+    let totalPrice = 0;
     let totalDiscount = 0;
     let totalKdv = 0;
 
@@ -144,7 +144,7 @@
         total = totalDiscount + totalKdv;
     }
 
-    $('#totalPrice').text(totalPrice.toFixed(2)); // İki ondalık basamaklı olarak yazdırın
+    $('#totalPrice').text(totalPrice.toFixed(2));
     $('#totalDiscount').text(totalDiscount.toFixed(2));
     $('#totalKdv').text(totalKdv.toFixed(2));
     $('#total').text(total.toFixed(2));

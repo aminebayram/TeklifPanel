@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using TeklifPanel.Business.Abstract;
+using TeklifPanel.Core;
 using TeklifPanel.Entity;
 using TeklifPanelWebUI.ViewModels;
 
@@ -137,8 +138,11 @@ namespace TeklifPanelWebUI.Controllers
         }
 
         [HttpPost]
-        public IActionResult SendMail()
+        public IActionResult SendMail(IFormFile pdfFile, string screenshot)
         {
+            var companyId = HttpContext.Session.GetInt32("CompanyId") ?? default;
+
+            Jobs.UploadImage(pdfFile, "denemePdf", companyId);
             return View();
         }
     }
