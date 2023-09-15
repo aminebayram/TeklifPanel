@@ -142,7 +142,9 @@ namespace TeklifPanelWebUI.Controllers
         {
             var companyId = HttpContext.Session.GetInt32("CompanyId") ?? default;
 
-            Jobs.UploadImage(pdfFile, "denemePdf", companyId);
+
+
+            Jobs.UploadPdf(pdfFile, "resim", companyId);
             return View();
         }
     }

@@ -1,10 +1,13 @@
 ﻿using Microsoft.AspNetCore.Http;
 using Newtonsoft.Json;
+using PdfSharp.Drawing;
+using PdfSharp.Pdf;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using static System.Net.Mime.MediaTypeNames;
 
 namespace TeklifPanel.Core
 {
@@ -26,6 +29,41 @@ namespace TeklifPanel.Core
                 file.CopyTo(stream);
             }
             return randomName;
+        }
+
+        public static string UploadPdf(IFormFile file, string url, int companyId)
+        {
+            var extension = Path.GetExtension(file.FileName);
+            var randomName = $"{url}-{Guid.NewGuid()}{extension}";
+
+            var folderPath = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot/Content/pdfs/C" + companyId);
+            Directory.CreateDirectory(folderPath); // Klasörü oluşturur
+
+            var pdfPath = Path.Combine(folderPath, randomName);
+
+            using (var stream = new FileStream(pdfPath, FileMode.Create))
+            {
+                file.CopyTo(stream);
+            }
+
+            // Yeni bir PDF belgesi oluşturun
+            PdfDocument pdfDocument = new PdfDocument();
+
+            // PDF sayfası oluşturun
+            PdfPage pdfPage = pdfDocument.AddPage();
+            XGraphics gfx = XGraphics.FromPdfPage(pdfPage);
+
+            // PNG dosyasını yükleyin ve PDF sayfasına çizin
+            var pngPath = Path.Combine(folderPath, "wwwroot/Content/pdfs/C" + companyId); // PNG dosyasının yolunu belirtin
+            XImage pngImage = XImage.FromFile(pngPath);
+            gfx.DrawImage(pngImage, 0, 0);
+
+            // PDF dosyasını oluşturun
+            var pdfFilePath = Path.Combine(folderPath, randomName + ".pdf");
+            pdfDocument.Save(pdfFilePath);
+
+            return randomName + ".pdf";
+
         }
 
         public static string MakeUrl(string url)
