@@ -1,4 +1,6 @@
 ﻿using Microsoft.AspNetCore.Mvc;
+using System.Net.Mail;
+using System.Net;
 using TeklifPanel.Business.Abstract;
 using TeklifPanel.Core;
 using TeklifPanel.Entity;
@@ -14,8 +16,9 @@ namespace TeklifPanelWebUI.Controllers
         private readonly IContactPersonService _contactPersonService;
         private readonly ICompanyService _companyService;
         private readonly ICompanySettingsService _companySettingsService;
+        private readonly IOfferService _offerService;
 
-        public OfferController(ICustomerService customerService, IProductService productService, ICategoryService categoryService, IContactPersonService contactPersonService, ICompanyService companyService, ICompanySettingsService companySettingsService)
+        public OfferController(ICustomerService customerService, IProductService productService, ICategoryService categoryService, IContactPersonService contactPersonService, ICompanyService companyService, ICompanySettingsService companySettingsService, IOfferService offerService)
         {
             _customerService = customerService;
             _productService = productService;
@@ -23,6 +26,7 @@ namespace TeklifPanelWebUI.Controllers
             _contactPersonService = contactPersonService;
             _companyService = companyService;
             _companySettingsService = companySettingsService;
+            _offerService = offerService;
         }
 
         public IActionResult Index()
@@ -83,14 +87,18 @@ namespace TeklifPanelWebUI.Controllers
             return View(productViewModel);
         }
 
-        public async Task<IActionResult> OfferPreview(List<int> Amount, List<decimal> Discount, int CustomerId, List<int> Id, List<int> CategoryId)
+        public async Task<IActionResult> OfferPreview(List<int> Amount, List<decimal> Discount, int CustomerId, List<int> Id, List<int> CategoryId, int ContactPersonId)
         {
+            Random random = new Random();
+
             var companyId = HttpContext.Session.GetInt32("CompanyId") ?? default;
             var company = await _companyService.GetByIdAsync(companyId);
 
             var companySettings = await _companySettingsService.GetAllCompanySettingsAsync(companyId);
 
             var customer = await _customerService.GetByIdAsync(CustomerId);
+
+            var contactPerson = await _contactPersonService.GetByIdAsync(ContactPersonId);
 
             var selectecProductList = new List<ProductViewModel>();
             for (int i = 0; i < Id.Count(); i++)
@@ -108,7 +116,7 @@ namespace TeklifPanelWebUI.Controllers
                     KDV = selectedCategory.KDV,
                 });
             }
-            
+
             CompanySettingsViewModel companySettingsViewModel = new CompanySettingsViewModel()
             {
                 Id = companyId,
@@ -132,19 +140,100 @@ namespace TeklifPanelWebUI.Controllers
                 ProductsViewModel = selectecProductList,
                 Company = company,
                 Customer = customer,
+                CustomerContact = contactPerson,
+                OrderNumber = random.Next(11111, 99999)
             };
 
             return View(offerViewModel);
         }
 
         [HttpPost]
-        public IActionResult SendMail(IFormFile pdfFile, string screenshot)
+        public async Task<IActionResult> SendMail(IFormFile pdfFile, int CustomerId)
         {
+
             var companyId = HttpContext.Session.GetInt32("CompanyId") ?? default;
+            var company = await _companyService.GetByIdAsync(companyId);
+
+            var companySettings = await _companySettingsService.GetAllCompanySettingsAsync(companyId);
+
+            var customer = await _customerService.GetByIdAsync(CustomerId);
 
 
+            CompanySettingsViewModel companySettingsViewModel = new CompanySettingsViewModel()
+            {
+                Id = companyId,
+                EmailAddress = company?.Email,
+                RecipientEmail = companySettings.Where(c => c.Parameter == "AliciEmail")?.FirstOrDefault().Value,
+                EmailServerPort = companySettings.Where(c => c.Parameter == "EmailSunucuPort")?.FirstOrDefault().Value,
+                EmailServer = companySettings.Where(c => c.Parameter == "EmailSunucu")?.FirstOrDefault().Value,
+                EmailUsername = companySettings.Where(c => c.Parameter == "EmailKullaniciAdi")?.FirstOrDefault().Value,
+                EmailPassword = companySettings.Where(c => c.Parameter == "EmailParola")?.FirstOrDefault().Value,
+                Logo = companySettings.Where(c => c.Parameter == "Logo")?.FirstOrDefault().Value,
+                Logo2 = companySettings.Where(c => c.Parameter == "Logo2")?.FirstOrDefault().Value,
+                PhoneNumber = companySettings.Where(c => c.Parameter == "TelNo")?.FirstOrDefault().Value,
+                FaxNumber = companySettings.Where(c => c.Parameter == "FaxNo")?.FirstOrDefault().Value,
+                Address = companySettings.Where(c => c.Parameter == "Adres")?.FirstOrDefault().Value,
+            };
 
-            Jobs.UploadPdf(pdfFile, "resim", companyId);
+
+            string sunucu = companySettingsViewModel.EmailServer;
+            var port = companySettingsViewModel.EmailServerPort;
+            string mail = companySettingsViewModel.EmailUsername;
+            string sifre = companySettingsViewModel.EmailPassword;
+            string aliciEmail = companySettingsViewModel.RecipientEmail;
+
+
+            var fromAddress = new MailAddress(mail, "Teklif");
+            var toAddress = new MailAddress(aliciEmail);
+
+            var customerEmail = new MailAddress(customer.Email);
+
+
+            SmtpClient smtp = new SmtpClient();
+            try
+            {
+                smtp.Host = sunucu;
+                smtp.Port = Convert.ToInt32(port);
+                smtp.EnableSsl = false;
+                smtp.DeliveryMethod = SmtpDeliveryMethod.Network;
+                smtp.UseDefaultCredentials = false;
+                smtp.Credentials = new NetworkCredential(mail, sifre);
+            }
+            catch
+            {
+                smtp.Host = sunucu;
+                smtp.Port = Convert.ToInt32(port);
+                smtp.EnableSsl = true;
+                smtp.DeliveryMethod = SmtpDeliveryMethod.Network;
+                smtp.UseDefaultCredentials = false;
+                smtp.Credentials = new NetworkCredential(mail, sifre);
+            }
+            var message = new MailMessage(fromAddress, toAddress);
+            var message2 = new MailMessage(fromAddress, customerEmail);
+
+            var pdf = Jobs.UploadPdf(pdfFile, "resim", companyId);
+
+            // PDF dosyasını ekleyin
+            var attachment = new Attachment(pdf);
+
+            message.Attachments.Add(attachment);
+            message2.Attachments.Add(attachment);
+
+            message.IsBodyHtml = true;
+            {
+                smtp.Send(message);
+            }
+            message2.IsBodyHtml = true;
+            {
+                smtp.Send(message2);
+            }
+
+            var offer = new Offer()
+            {
+                Pdf = pdf,
+
+            };
+
             return View();
         }
     }

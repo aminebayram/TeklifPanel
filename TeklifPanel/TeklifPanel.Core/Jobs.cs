@@ -1,10 +1,13 @@
 ﻿using Microsoft.AspNetCore.Http;
 using Newtonsoft.Json;
+using PdfSharp;
 using PdfSharp.Drawing;
 using PdfSharp.Pdf;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Net.Mail;
+using System.Net;
 using System.Text;
 using System.Threading.Tasks;
 using static System.Net.Mime.MediaTypeNames;
@@ -49,20 +52,31 @@ namespace TeklifPanel.Core
             // Yeni bir PDF belgesi oluşturun
             PdfDocument pdfDocument = new PdfDocument();
 
-            // PDF sayfası oluşturun
             PdfPage pdfPage = pdfDocument.AddPage();
+            pdfPage.Size = PageSize.A4;
+            pdfPage.Orientation = PageOrientation.Landscape;
+
+            // PDF sayfası oluşturun
             XGraphics gfx = XGraphics.FromPdfPage(pdfPage);
 
+
             // PNG dosyasını yükleyin ve PDF sayfasına çizin
-            var pngPath = Path.Combine(folderPath, "wwwroot/Content/pdfs/C" + companyId); // PNG dosyasının yolunu belirtin
+            var pngPath = Path.Combine(folderPath, randomName); // PNG dosyasının yolunu belirtin
             XImage pngImage = XImage.FromFile(pngPath);
-            gfx.DrawImage(pngImage, 0, 0);
+
+            // Örnek boyutlar
+            double width = pdfPage.Width;
+            double height = pdfPage.Height;
+
+            // PNG dosyasını PDF sayfasına çizin, tam sayfa olarak
+            gfx.DrawImage(pngImage, 0, 0, width, height);
+
 
             // PDF dosyasını oluşturun
             var pdfFilePath = Path.Combine(folderPath, randomName + ".pdf");
             pdfDocument.Save(pdfFilePath);
 
-            return randomName + ".pdf";
+            return pdfFilePath;
 
         }
 

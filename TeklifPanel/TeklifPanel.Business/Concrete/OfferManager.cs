@@ -5,20 +5,28 @@ using System.Linq.Expressions;
 using System.Text;
 using System.Threading.Tasks;
 using TeklifPanel.Business.Abstract;
+using TeklifPanel.Data.Abstract;
 using TeklifPanel.Entity;
 
 namespace TeklifPanel.Business.Concrete
 {
     public class OfferManager : IOfferService
     {
+        private readonly IOfferRepository _offerRepository;
+
+        public OfferManager(IOfferRepository offerRepository)
+        {
+            _offerRepository = offerRepository;
+        }
+
         public void Create(Offer entity)
         {
             throw new NotImplementedException();
         }
 
-        public Task<bool> CreateAsync(Offer entity)
+        public async Task<bool> CreateAsync(Offer entity)
         {
-            throw new NotImplementedException();
+            return await _offerRepository.CreateAsync(entity);
         }
 
         public void Delete(Offer entity)

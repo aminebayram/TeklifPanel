@@ -17,7 +17,7 @@
             ÖNİZLEME
         </div>
         <div class="fatura-no mt-4">
-            <strong>Teklif No:</strong> 2202
+            <strong>Teklif No:</strong> @Model.OrderNumber
         </div>
         <div class="tarih mt-4">
             <strong>Teklif Tarih:</strong>@DateTime.Now.ToShortDateString()
@@ -32,7 +32,7 @@
         @Model.Customer.Name
     </h5>
     <Strong>Sayın</Strong>
-    <p>Ebru Yılmaz</p>
+    <p>@Model.CustomerContact.Name</p>
     <p class="adres">
         @Model.Customer.OpenAddress
     </p>
