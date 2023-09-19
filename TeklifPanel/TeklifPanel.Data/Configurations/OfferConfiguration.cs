@@ -22,18 +22,19 @@ namespace TeklifPanel.Data.Configurations
 
             builder.HasOne(o => o.Customer)
                 .WithMany(c => c.Offers)
-                .HasForeignKey(o =>o.CustomerId)
-                .OnDelete(DeleteBehavior.NoAction);
-
-            builder.HasOne(o => o.Address)
-                .WithMany(a => a.Offers)
-                .HasForeignKey(o => o.AddressId)
+                .HasForeignKey(o => o.CustomerId)
                 .OnDelete(DeleteBehavior.NoAction);
 
             builder.HasOne(o => o.CustomerContact)
                 .WithMany(c => c.Offers)
                 .HasForeignKey(o => o.CustomerContactId)
                 .OnDelete(DeleteBehavior.NoAction);
+
+            //builder.HasOne(o => o.Address)
+            //    .WithMany(a => a.Offers)
+            //    .HasForeignKey(o => o.AddressId)
+            //    .OnDelete(DeleteBehavior.NoAction);
+
 
         }
 

@@ -58,8 +58,18 @@ namespace TeklifPanel.Data.Concrete.EfCore
         public async Task<bool> CreateAsync(TEntity entity)
         {
             await _dbContext.AddAsync(entity);
-            var result = await _dbContext.SaveChangesAsync();
-            return result > 0 ? true : false;
+            try
+            {
+                var result = await _dbContext.SaveChangesAsync();
+                return result > 0 ? true : false;
+            }
+            catch (Exception)
+            {
+
+                throw;
+            }
+         
+ 
         }
 
         public async Task<bool> UpdateAsync(TEntity entity)

@@ -5,6 +5,11 @@ using TeklifPanel.Business.Abstract;
 using TeklifPanel.Core;
 using TeklifPanel.Entity;
 using TeklifPanelWebUI.ViewModels;
+using DinkToPdf;
+using System.ComponentModel.Design;
+using System.Security.Policy;
+using DinkToPdf.Contracts;
+using Microsoft.AspNetCore.Identity;
 
 namespace TeklifPanelWebUI.Controllers
 {
@@ -17,8 +22,10 @@ namespace TeklifPanelWebUI.Controllers
         private readonly ICompanyService _companyService;
         private readonly ICompanySettingsService _companySettingsService;
         private readonly IOfferService _offerService;
+        private readonly IConverter _pdfConverter;
+        private readonly UserManager<User> _userManager;
 
-        public OfferController(ICustomerService customerService, IProductService productService, ICategoryService categoryService, IContactPersonService contactPersonService, ICompanyService companyService, ICompanySettingsService companySettingsService, IOfferService offerService)
+        public OfferController(ICustomerService customerService, IProductService productService, ICategoryService categoryService, IContactPersonService contactPersonService, ICompanyService companyService, ICompanySettingsService companySettingsService, IOfferService offerService, IConverter pdfConverter, UserManager<User> userManager)
         {
             _customerService = customerService;
             _productService = productService;
@@ -27,16 +34,21 @@ namespace TeklifPanelWebUI.Controllers
             _companyService = companyService;
             _companySettingsService = companySettingsService;
             _offerService = offerService;
+            _pdfConverter = pdfConverter;
+            _userManager = userManager;
         }
 
         public IActionResult Index()
         {
+
             return View();
         }
 
-        public IActionResult OfferList()
+        public async Task<IActionResult> OfferList()
         {
-            return View();
+            var companyId = HttpContext.Session.GetInt32("CompanyId") ?? default;
+            var offerList = await _offerService.GetCompanyOffersAsync(companyId);
+            return View(offerList);
 
         }
         public async Task<IActionResult> AddOffer()
@@ -148,16 +160,19 @@ namespace TeklifPanelWebUI.Controllers
         }
 
         [HttpPost]
-        public async Task<IActionResult> SendMail(IFormFile pdfFile, int CustomerId)
+        public async Task<IActionResult> SendMail(IFormFile pdfFile, int CustomerId, int OfferNumber, int ContactPersonId)
         {
-
             var companyId = HttpContext.Session.GetInt32("CompanyId") ?? default;
+            var userId = HttpContext.Session.GetString("UserId") ?? default;
+
+            var user = await _userManager.FindByIdAsync(userId);
             var company = await _companyService.GetByIdAsync(companyId);
 
             var companySettings = await _companySettingsService.GetAllCompanySettingsAsync(companyId);
 
             var customer = await _customerService.GetByIdAsync(CustomerId);
 
+            var contactPerson = await _contactPersonService.GetByIdAsync(ContactPersonId);
 
             CompanySettingsViewModel companySettingsViewModel = new CompanySettingsViewModel()
             {
@@ -175,19 +190,16 @@ namespace TeklifPanelWebUI.Controllers
                 Address = companySettings.Where(c => c.Parameter == "Adres")?.FirstOrDefault().Value,
             };
 
-
             string sunucu = companySettingsViewModel.EmailServer;
             var port = companySettingsViewModel.EmailServerPort;
             string mail = companySettingsViewModel.EmailUsername;
             string sifre = companySettingsViewModel.EmailPassword;
             string aliciEmail = companySettingsViewModel.RecipientEmail;
 
-
             var fromAddress = new MailAddress(mail, "Teklif");
             var toAddress = new MailAddress(aliciEmail);
 
             var customerEmail = new MailAddress(customer.Email);
-
 
             SmtpClient smtp = new SmtpClient();
             try
@@ -211,10 +223,14 @@ namespace TeklifPanelWebUI.Controllers
             var message = new MailMessage(fromAddress, toAddress);
             var message2 = new MailMessage(fromAddress, customerEmail);
 
-            var pdf = Jobs.UploadPdf(pdfFile, "resim", companyId);
+            var pdf = Jobs.UploadPdf(pdfFile, Jobs.MakeUrl(customer.Name), companyId);
+
+            var pdfSplit = pdf.Split("\\");
+            var pdfUrl = pdfSplit[pdfSplit.Length - 1];
 
             // PDF dosyasını ekleyin
             var attachment = new Attachment(pdf);
+
 
             message.Attachments.Add(attachment);
             message2.Attachments.Add(attachment);
@@ -230,11 +246,87 @@ namespace TeklifPanelWebUI.Controllers
 
             var offer = new Offer()
             {
-                Pdf = pdf,
-
+                Pdf = pdfUrl,
+                Company = company,
+                CompanyId = companyId,
+                Customer = customer,
+                User = user,
+                DateOfOffer = DateTime.Now,
+                UserId = user.Id,
+                CustomerContact = contactPerson,
+                OfferNumber = OfferNumber
             };
 
+            var result = await _offerService.CreateAsync(offer);
+
             return View();
+        }
+
+        [HttpPost]
+        public IActionResult DenemePdf()
+        {
+
+            var converter = new BasicConverter(new PdfTools());
+            var doc = new HtmlToPdfDocument()
+            {
+                GlobalSettings =
+                {
+                    PaperSize = PaperKind.A4,
+                    Orientation = Orientation.Portrait
+                },
+                Objects =
+                {
+                    new ObjectSettings()
+                    {
+                        PagesCount=true,
+                        HtmlContent = "<h1>Hello, PDF!</h1>",
+                    }
+                }
+            };
+
+            byte[] pdfBytes = converter.Convert(doc);
+
+            var pdfFile = File(pdfBytes, "application/pdf", "example.pdf");
+
+
+            return View();
+        }
+
+        [HttpPost]
+        public IActionResult GeneratePdf(string htmlContent)
+        {
+            try
+            {
+                var globalSettings = new GlobalSettings
+                {
+                    PaperSize = PaperKind.A4,
+                    Orientation = Orientation.Portrait,
+                    Margins = new MarginSettings { Top = 10, Bottom = 10, Left = 10, Right = 10 }
+                };
+
+                var objectSettings = new ObjectSettings
+                {
+                    PagesCount = true,
+                    HtmlContent = htmlContent,
+                    WebSettings = { DefaultEncoding = "utf-8" },
+                    HeaderSettings = { FontName = "Arial", FontSize = 9, Right = "Sayfa [page] / [toPage]", Line = true },
+                    FooterSettings = { FontName = "Arial", FontSize = 9, Line = true, Center = "Sayfa [page] / [toPage]" }
+                };
+
+                var pdf = new HtmlToPdfDocument()
+                {
+                    GlobalSettings = globalSettings,
+                    Objects = { objectSettings }
+                };
+
+                var pdfBytes = _pdfConverter.Convert(pdf);
+                return File(pdfBytes, "application/pdf");
+            }
+            catch (Exception ex)
+            {
+                // Hata işleme kodları burada yer alabilir.
+                return Content("Hata oluştu: " + ex.Message);
+            }
         }
     }
 }

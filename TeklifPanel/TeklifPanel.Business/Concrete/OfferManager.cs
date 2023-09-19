@@ -49,6 +49,11 @@ namespace TeklifPanel.Business.Concrete
             throw new NotImplementedException();
         }
 
+        public async Task<List<Offer>> GetCompanyOffersAsync(int companyId)
+        {
+            return await _offerRepository.GetCompanyOffersAsync(companyId);
+        }
+
         public Task<ICollection<Offer>> GetManyAsync(Expression<Func<Offer, bool>> expression)
         {
             throw new NotImplementedException();

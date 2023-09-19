@@ -17,6 +17,7 @@ namespace TeklifPanel.Core
     public static class Jobs
     {
         public const string ImageRoute = "/Content/images/C";
+        public const string PdfRoute = "/Content/pdfs/C";
         public static string UploadImage(IFormFile file, string url, int companyId)
         {
             var extension = Path.GetExtension(file.FileName);
@@ -49,6 +50,13 @@ namespace TeklifPanel.Core
                 file.CopyTo(stream);
             }
 
+            var result = CreatePdf(folderPath, randomName);
+
+            return result;
+        }
+
+        public static string CreatePdf(string folderPath, string randomName)
+        {
             // Yeni bir PDF belgesi oluşturun
             PdfDocument pdfDocument = new PdfDocument();
 
@@ -58,7 +66,6 @@ namespace TeklifPanel.Core
 
             // PDF sayfası oluşturun
             XGraphics gfx = XGraphics.FromPdfPage(pdfPage);
-
 
             // PNG dosyasını yükleyin ve PDF sayfasına çizin
             var pngPath = Path.Combine(folderPath, randomName); // PNG dosyasının yolunu belirtin
@@ -71,13 +78,11 @@ namespace TeklifPanel.Core
             // PNG dosyasını PDF sayfasına çizin, tam sayfa olarak
             gfx.DrawImage(pngImage, 0, 0, width, height);
 
-
             // PDF dosyasını oluşturun
             var pdfFilePath = Path.Combine(folderPath, randomName + ".pdf");
             pdfDocument.Save(pdfFilePath);
 
             return pdfFilePath;
-
         }
 
         public static string MakeUrl(string url)

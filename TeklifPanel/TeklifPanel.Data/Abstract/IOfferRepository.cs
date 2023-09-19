@@ -9,5 +9,7 @@ namespace TeklifPanel.Data.Abstract
 {
     public interface IOfferRepository : IRepository<Offer>
     {
+        Task<List<Offer>> GetCompanyOffersAsync(int companyId);
+
     }
 }

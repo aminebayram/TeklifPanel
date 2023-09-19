@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
+using TeklifPanel.Business.Abstract;
 using TeklifPanel.Entity;
 using TeklifPanelWebUI.Models;
 
@@ -9,11 +10,15 @@ namespace TeklifPanelWebUI.Controllers
     {
         private readonly UserManager<User> _userManager;
         private readonly SignInManager<User> _signInManager;
+        private readonly ILogService _logService;
+        private readonly ICompanyService _companyService;
 
-        public LoginController(UserManager<User> userManager, SignInManager<User> signInManager)
+        public LoginController(UserManager<User> userManager, SignInManager<User> signInManager, ILogService logService, ICompanyService companyService)
         {
             _userManager = userManager;
             _signInManager = signInManager;
+            _logService = logService;
+            _companyService = companyService;
         }
 
         public IActionResult Index()
@@ -34,8 +39,20 @@ namespace TeklifPanelWebUI.Controllers
                 var result = await _signInManager.PasswordSignInAsync(user, loginModel.Password, loginModel.RememberMe, false);
                 if (result.Succeeded)
                 {
-                        HttpContext.Session.SetString("UserId", user.Id);
-                        HttpContext.Session.SetInt32("CompanyId", user.CompanyId);
+                    HttpContext.Session.SetString("UserId", user.Id);
+                    HttpContext.Session.SetInt32("CompanyId", user.CompanyId);
+
+                    var company = await _companyService.GetByIdAsync(user.CompanyId);
+
+                    var log = new Log()
+                    {
+                        CompanyId = company.Id,
+                        Company = company,
+                        DateOfLogin = DateTime.Now,
+                        UserEmail = user.Email,
+                    };
+
+                    await _logService.CreateAsync(log);
 
                     return RedirectToAction("Index", "Home");
                 }

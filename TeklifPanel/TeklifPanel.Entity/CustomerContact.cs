@@ -8,6 +8,10 @@ namespace TeklifPanel.Entity
 {
     public class CustomerContact : BaseEntity
     {
+        public CustomerContact()
+        {
+            Offers = new List<Offer>();
+        }
         public string Name { get; set; }
         public string Email { get; set; }
         public string Department { get; set; }

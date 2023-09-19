@@ -1,4 +1,4 @@
-﻿
+﻿@model List<Offer>
 <div class="row" style="margin: 2% 6%;">
     <div class="col-lg-7 col-md-7 col-12">
         <div class="table-title">
@@ -30,56 +30,34 @@
         </tr>
     </thead>
     <tbody class="table-hover">
-        <tr>
-            <td class="text-left">Demir Çelik</td>
-            <td class="text-left">Emir Çiçek</td>
-            <td class="text-left">22.02.20</td>
-            <td class="text-left"><i class="fas fa-check-double" title="Görüldü"></i></td>
-            <td class="text-left">
-                <a href="onizleme.html">
-                    <i class="fas fa-eye"></i>
-                </a>
-            </td>
-            <td class="text-left">
-                <a href="onizleme.html">
-                    <i class="fas fa-print"></i>
-                </a>
-            </td>
-        </tr>
-        <tr>
-            <td class="text-left">Demir Çelik</td>
-            <td class="text-left">Emir Çiçek</td>
-            <td class="text-left">22.02.20</td>
-            <td class="text-left"><i class="fas fa-check" title="Gönderildi"></i></td>
-
-            <td class="text-left">
-                <a href="onizleme.html">
-                    <i class="fas fa-eye"></i>
-                </a>
-            </td>
-            <td class="text-left">
-                <a href="onizleme.html">
-                    <i class="fas fa-print"></i>
-                </a>
-            </td>
-
-        </tr>
-        <tr>
-            <td class="text-left">Demir Çelik</td>
-            <td class="text-left">Emir Çiçek</td>
-            <td class="text-left">22.02.20</td>
-            <td class="text-left"><a href="#"><i class="fas fa-sync-alt" title="Tekrar Gönder"></i></a></td>
-            <td class="text-left">
-                <a href="onizleme.html">
-                    <i class="fas fa-eye"></i>
-                </a>
-            </td>
-            <td class="text-left">
-                <a href="onizleme.html">
-                    <i class="fas fa-print"></i>
-                </a>
-            </td>
-        </tr>
-
+        @foreach (var offer in Model)
+        {
+            <tr>
+                <td class="text-left">@offer.Customer.Name</td>
+                <td class="text-left">@offer.User.FirstName</td>
+                <td class="text-left">@offer.DateOfOffer</td>
+                <td class="text-left"><i class="fas fa-check-double" title="Görüldü"></i></td>
+                <td class="text-left">
+                    <a href="@Jobs.PdfRoute@offer.CompanyId/@offer.Pdf" target="_blank">
+                        <i class="fas fa-eye"></i>
+                    </a>
+                </td>
+                <td class="text-left">
+                    @{
+                        var pdfFile = Jobs.PdfRoute + offer.CompanyId + "/" + offer.Pdf;
+                    }
+                    <a href="@pdfFile" onclick="printPdf(@pdfFile)">
+                        <i class="fas fa-print"></i>
+                    </a>
+                </td>
+            </tr>
+        }
     </tbody>
 </table>
+
+<script>
+    function printPdf(pdfFile) {
+        alert("true");
+        window.print();
+    }
+</script>

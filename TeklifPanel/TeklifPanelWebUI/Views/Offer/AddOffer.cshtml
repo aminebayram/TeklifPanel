@@ -206,14 +206,16 @@
             }, margins
         );
     }
-    </script>
+</script>
 
 @*Mail Gönderme*@
 <script>
     function captureDivToPdfAndPost() {
 
         let selectedCustomerId = $('#customerId').val();
-        console.log(selectedCustomerId);
+        let offerNumber = $('#orderNumber').text();
+        let selectedContactPersons = $("#contactPersons").val();
+
         // Div'i yakalayın
         var divToCapture = document.getElementById('productPreview');
 
@@ -239,7 +241,8 @@
 
             // POST isteğini oluşturun
             var xhr = new XMLHttpRequest();
-            xhr.open('POST', '/Offer/SendMail?CustomerId=' + selectedCustomerId, true);
+            //xhr.open('POST', '/Offer/SendMail?CustomerId=' + selectedCustomerId + "&OrderNumber=" + orderNumber, true);
+            xhr.open('POST', `/Offer/SendMail?CustomerId=${selectedCustomerId}&OfferNumber=${offerNumber}&ContactPersonId=${selectedContactPersons}`, true);
 
             // İsteği gönderin
             xhr.send(formData);
@@ -315,40 +318,40 @@
             let selectedCustomerId = $('#customerId').val();
             let categoryId = $("#categoryId").val();
             let selectedContactPersons = $("#contactPersons").val();
-            
+
 
             var productHtml = `
-                    <div class=" mb-4 selectedDiv" id="selectedDiv${id}">
-                        <input type="hidden" value="${id}" name="Id" />
-                        <input type="hidden" value="${selectedCustomerId}" name="CustomerId" />
-                        <input type="hidden" value="${categoryId}" name="CategoryId" />
-                        <input type="hidden" value="${selectedContactPersons}" name="ContactPersonId" />
-                        <div class="form-row row">
-                            <div class="form-group col-lg-5 col-md-5 col-12">
-                                <label >Ürün Kategori</label>
-                                <label class="selectedDivItem${id}">${categoryName}</label>
-                            </div>
-                            <div class="form-group col-lg-5 col-md-5 col-12">
-                                <label >Ürün Adı</label>
-                                <label class="selectedDivItem${id}">${productName}</label>
-                            </div>
-                        </div>
-                        <div class="form-row row">
-                            <div class="form-group col-lg-5 col-md-5 col-12">
-                                <label for="inputName">Adet</label>
-                                <input type="number" id="Amount" class="form-control" name="Amount" placeholder="Adet" required />
-                            </div>
-                            <div class="form-group col-lg-5 col-md-5 col-12">
-                                <label>İskonto</label>
-                                <input type="text" id="Discount" class="form-control" name="Discount" placeholder="İskonto" value="${productDiscount}" required />
-                            </div>
-                            <div class="form-group col-lg-1 col-md-1 col-12">
-                                <button class=" btn btn-danger  remove-contact" onclick="removeDiv(${id})" >Sil</button>
-                            </div>
-                        </div>
-                    <hr />
-                    </div>
-                                    `;
+                                <div class=" mb-4 selectedDiv" id="selectedDiv${id}">
+                                    <input type="hidden" value="${id}" name="Id" />
+                                    <input type="hidden" value="${selectedCustomerId}" name="CustomerId" />
+                                    <input type="hidden" value="${categoryId}" name="CategoryId" />
+                                    <input type="hidden" value="${selectedContactPersons}" name="ContactPersonId" />
+                                    <div class="form-row row">
+                                        <div class="form-group col-lg-5 col-md-5 col-12">
+                                            <label >Ürün Kategori</label>
+                                            <label class="selectedDivItem${id}">${categoryName}</label>
+                                        </div>
+                                        <div class="form-group col-lg-5 col-md-5 col-12">
+                                            <label >Ürün Adı</label>
+                                            <label class="selectedDivItem${id}">${productName}</label>
+                                        </div>
+                                    </div>
+                                    <div class="form-row row">
+                                        <div class="form-group col-lg-5 col-md-5 col-12">
+                                            <label for="inputName">Adet</label>
+                                            <input type="number" id="Amount" class="form-control" name="Amount" placeholder="Adet" required />
+                                        </div>
+                                        <div class="form-group col-lg-5 col-md-5 col-12">
+                                            <label>İskonto</label>
+                                            <input type="text" id="Discount" class="form-control" name="Discount" placeholder="İskonto" value="${productDiscount}" required />
+                                        </div>
+                                        <div class="form-group col-lg-1 col-md-1 col-12">
+                                            <button class=" btn btn-danger  remove-contact" onclick="removeDiv(${id})" >Sil</button>
+                                        </div>
+                                    </div>
+                                <hr />
+                                </div>
+                                                `;
             document.getElementById('selectedProducts').innerHTML += productHtml;
 
         }

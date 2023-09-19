@@ -1,4 +1,4 @@
-﻿
+﻿@model HomeViewModel
 @if (TempData["Message"] != null)
 {
     <div class="alert alert-success alert-dismissible fade show" role="alert">
@@ -88,42 +88,21 @@
                         </tr>
                     </thead>
                     <tbody class="table-hover">
-                        <tr>
-                            <td class="text-left">Demir Çelik</td>
-                            <td class="text-left">Işıl Demir</td>
-                            <td class="text-left">Emir Çiçek</td>
-                            <td class="text-left">20.07.2023 13.57</td>
-                            <td class="text-left">%13</td>
-                            <td class="text-left">
-                                <a href="onizleme.html">
-                                    <i class="fas fa-eye"></i>
-                                </a>
-                            </td>
-                        </tr>
-                        <tr>
-                            <td class="text-left">Demir Çelik</td>
-                            <td class="text-left">Işıl Demir</td>
-                            <td class="text-left">Emir Çiçek</td>
-                            <td class="text-left">20.07.2023 13.57</td>
-                            <td class="text-left">%13</td>
-                            <td class="text-left">
-                                <a href="onizleme.html">
-                                    <i class="fas fa-eye"></i>
-                                </a>
-                            </td>
-                        </tr>
-                        <tr>
-                            <td class="text-left">Demir Çelik</td>
-                            <td class="text-left">Işıl Demir</td>
-                            <td class="text-left">Emir Çiçek</td>
-                            <td class="text-left">20.07.2023 13.57</td>
-                            <td class="text-left">%13</td>
-                            <td class="text-left">
-                                <a href="onizleme.html">
-                                    <i class="fas fa-eye"></i>
-                                </a>
-                            </td>
-                        </tr>
+                        @foreach (var offer in Model.Offers)
+                        {
+                            <tr>
+                                <td class="text-left">@offer.Customer.Name</td>
+                                <td class="text-left">@offer.CustomerContact.Name</td>
+                                <td class="text-left">@offer.User.FirstName</td>
+                                <td class="text-left">@offer.DateOfOffer</td>
+                                <td class="text-left">@offer.Customer.Discount</td>
+                                <td class="text-left">
+                                    <a href="@Jobs.PdfRoute@offer.CompanyId/@offer.Pdf" target="_blank">
+                                        <i class="fas fa-eye"></i>
+                                    </a>
+                                </td>
+                            </tr>
+                        }
 
                     </tbody>
                 </table>
@@ -142,18 +121,13 @@
                         </tr>
                     </thead>
                     <tbody class="table-hover">
-                        <tr>
-                            <td class="text-left">emircelik@demircelik.com</td>
-                            <td class="text-left">12.12.2021</td>
-                        </tr>
-                        <tr>
-                            <td class="text-left">emircelik@demircelik.com</td>
-                            <td class="text-left">12.12.2021</td>
-                        </tr>
-                        <tr>
-                            <td class="text-left">emircelik@demircelik.com</td>
-                            <td class="text-left">12.12.2021</td>
-                        </tr>
+                        @foreach (var log in Model.Logs)
+                        {
+                            <tr>
+                                <td class="text-left">@log.UserEmail</td>
+                                <td class="text-left">@log.DateOfLogin</td>
+                            </tr>
+                        }
 
                     </tbody>
                 </table>

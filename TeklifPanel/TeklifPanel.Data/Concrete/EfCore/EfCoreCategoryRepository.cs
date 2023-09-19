@@ -33,6 +33,7 @@ namespace TeklifPanel.Data.Concrete.EfCore
             var categories = await context.Categories
                 .Where(c => c.CompanyId == companyd)
                 .ToListAsync();
+
             return categories;
         }
     }

@@ -405,11 +405,14 @@ namespace TeklifPanel.Data.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
-                    b.Property<int>("AddressId")
+                    b.Property<int?>("AddressId")
                         .HasColumnType("int");
 
                     b.Property<decimal?>("BuyPrice")
                         .HasColumnType("decimal(18,2)");
+
+                    b.Property<int>("CompanyId")
+                        .HasColumnType("int");
 
                     b.Property<int>("CustomerContactId")
                         .HasColumnType("int");
@@ -438,8 +441,8 @@ namespace TeklifPanel.Data.Migrations
                     b.Property<decimal?>("KDV")
                         .HasColumnType("decimal(18,2)");
 
-                    b.Property<string>("OrderNumber")
-                        .HasColumnType("nvarchar(max)");
+                    b.Property<int>("OfferNumber")
+                        .HasColumnType("int");
 
                     b.Property<string>("Pdf")
                         .HasColumnType("nvarchar(max)");
@@ -453,6 +456,8 @@ namespace TeklifPanel.Data.Migrations
                     b.HasKey("Id");
 
                     b.HasIndex("AddressId");
+
+                    b.HasIndex("CompanyId");
 
                     b.HasIndex("CustomerContactId");
 
@@ -805,10 +810,14 @@ namespace TeklifPanel.Data.Migrations
 
             modelBuilder.Entity("TeklifPanel.Entity.Offer", b =>
                 {
-                    b.HasOne("TeklifPanel.Entity.Address", "Address")
+                    b.HasOne("TeklifPanel.Entity.Address", null)
                         .WithMany("Offers")
-                        .HasForeignKey("AddressId")
-                        .OnDelete(DeleteBehavior.NoAction)
+                        .HasForeignKey("AddressId");
+
+                    b.HasOne("TeklifPanel.Entity.Company", "Company")
+                        .WithMany()
+                        .HasForeignKey("CompanyId")
+                        .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
                     b.HasOne("TeklifPanel.Entity.CustomerContact", "CustomerContact")
@@ -828,7 +837,7 @@ namespace TeklifPanel.Data.Migrations
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.NoAction);
 
-                    b.Navigation("Address");
+                    b.Navigation("Company");
 
                     b.Navigation("Customer");
 

@@ -16,5 +16,27 @@ namespace TeklifPanel.Data.Concrete.EfCore
         {
             get { return _dbContext as TeklifPanelContext; }
         }
+
+        public async Task<List<Offer>> GetCompanyOffersAsync(int companyId)
+        {
+            try
+            {
+                var offerList = await context.Offers
+                    .Where(o => o.CompanyId == companyId)
+                    .Include(o => o.Company)
+                    .Include(o => o.CustomerContact)
+                    .Include(o => o.Customer)
+                    .Include(o => o.User)
+                    .ToListAsync();
+                return offerList;
+
+            }
+            catch (Exception e)
+            {
+
+                throw;
+            }
+
+        }
     }
 }

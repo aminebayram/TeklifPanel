@@ -1,5 +1,8 @@
+using DinkToPdf;
+using DinkToPdf.Contracts;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
+using PdfSharp.Charting;
 using TeklifPanel.Business.Abstract;
 using TeklifPanel.Business.Concrete;
 using TeklifPanel.Data.Abstract;
@@ -44,6 +47,7 @@ builder.Services.AddScoped<IProductRepository, EfCoreProductRepository>();
 builder.Services.AddScoped<IUserRepository,EfCoreUserRepository>();
 builder.Services.AddScoped<ICompanySettingsRepository,EfCoreCompanySettingsRepository>();
 builder.Services.AddScoped<IIbanRepository, EfCoreIbanRepository>();
+builder.Services.AddScoped<ILogRepository, EfCoreLogRepository>();
 
 builder.Services.AddScoped<IAddressService, AddressManager>();
 builder.Services.AddScoped<ICategoryService, CategoryManager>();
@@ -56,6 +60,9 @@ builder.Services.AddScoped<IProductService, ProductManager>();
 builder.Services.AddScoped<IUserService, UserManager>();
 builder.Services.AddScoped<ICompanySettingsService, CompanySettingsManager>();
 builder.Services.AddScoped<IIbanService, IbanManager>();
+builder.Services.AddScoped<ILogService, LogManager>();
+
+builder.Services.AddSingleton(typeof(IConverter), new SynchronizedConverter(new PdfTools()));
 
 // Add services to the container.
 builder.Services.AddControllersWithViews();
