@@ -67,15 +67,14 @@ namespace TeklifPanelWebUI.Controllers
 
             var customerContactPersons = await _contactPersonService.GetCustomerContacts(companyId, id);
             return View(customerContactPersons);
-
         }
 
-        public async Task<IActionResult> GetProducts(int id, int customerId)
+        public async Task<IActionResult> GetProducts(int categoryId, int customerId)
         {
             var companyId = HttpContext.Session.GetInt32("CompanyId") ?? default;
-            var productList = await _productService.GetProductsByCategoryAsync(companyId, id);
+            var productList = await _productService.GetProductsByCategoryAsync(companyId, categoryId);
             var customer = await _customerService.GetByIdAsync(customerId);
-            var category = await _categoryService.GetByIdAsync(id);
+            var category = await _categoryService.GetByIdAsync(categoryId);
 
             var productViewModel = new List<ProductViewModel>();
             foreach (var product in productList)
@@ -113,6 +112,7 @@ namespace TeklifPanelWebUI.Controllers
             var contactPerson = await _contactPersonService.GetByIdAsync(ContactPersonId);
 
             var selectecProductList = new List<ProductViewModel>();
+
             for (int i = 0; i < Id.Count(); i++)
             {
                 var selectedProduct = await _productService.GetProductByIdAsync(Id[i]);
@@ -153,14 +153,14 @@ namespace TeklifPanelWebUI.Controllers
                 Company = company,
                 Customer = customer,
                 CustomerContact = contactPerson,
-                OrderNumber = random.Next(11111, 99999)
+                OfferNumber = random.Next(11111, 99999)
             };
 
             return View(offerViewModel);
         }
 
         [HttpPost]
-        public async Task<IActionResult> SendMail(IFormFile pdfFile, int CustomerId, int OfferNumber, int ContactPersonId)
+        public async Task<IActionResult> SendMail(IFormFile pdfFile, int CustomerId, int OfferNumber, int ContactPersonId, List<decimal> Discount)
         {
             var companyId = HttpContext.Session.GetInt32("CompanyId") ?? default;
             var userId = HttpContext.Session.GetString("UserId") ?? default;
@@ -244,6 +244,8 @@ namespace TeklifPanelWebUI.Controllers
                 smtp.Send(message2);
             }
 
+
+
             var offer = new Offer()
             {
                 Pdf = pdfUrl,
@@ -260,6 +262,35 @@ namespace TeklifPanelWebUI.Controllers
             var result = await _offerService.CreateAsync(offer);
 
             return View();
+        }
+
+        public async Task<IActionResult> Search(int customerId, string searchWord)
+        {
+            var companyId = HttpContext.Session.GetInt32("CompanyId") ?? default;
+            var productList = await _productService.GetSearchProduct(companyId, searchWord);
+            var customer = await _customerService.GetByIdAsync(customerId);
+
+            var productViewModel = new List<ProductViewModel>();
+            foreach (var product in productList)
+            {
+                productViewModel.Add(new ProductViewModel()
+                {
+                    Id = product.Id,
+                    Code = product?.Code,
+                    Name = product?.Name,
+                    SellPrice = product?.SellPrice,
+                    Detail = product?.Detail,
+                    Stock = product.Stock,
+                    Discount = customer?.Discount,
+                    Images = product?.ProductImages.Select(p => p.Url).ToList(),
+                    CompanyId = product.CompanyId,
+                    CategoryName = product.Category?.Name,
+                    CategoryId = product.CategoryId
+                });
+
+            }
+
+            return View(productViewModel);
         }
 
         [HttpPost]
@@ -328,5 +359,7 @@ namespace TeklifPanelWebUI.Controllers
                 return Content("Hata oluştu: " + ex.Message);
             }
         }
+
+
     }
 }

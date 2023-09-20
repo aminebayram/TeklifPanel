@@ -5,7 +5,7 @@ namespace TeklifPanelWebUI.ViewModels
     public class OfferViewModel
     {
         public string Pdf { get; set; }
-        public int OrderNumber { get; set; } //Siparis Numarasi
+        public int OfferNumber { get; set; } //Teklif Numarasi
         public decimal? SellPrice { get; set; }
         public decimal? KDV { get; set; }
         public string DateOfOffer { get; set; }

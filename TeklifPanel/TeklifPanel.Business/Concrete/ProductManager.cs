@@ -78,6 +78,11 @@ namespace TeklifPanel.Business.Concrete
             return await _productRepository.GetProductsByCategoryAsync(companyId, categoryId);
         }
 
+        public async Task<List<Product>> GetSearchProduct(int companyId, string searchWord)
+        {
+           return await _productRepository.GetSearchProduct(companyId, searchWord);
+        }
+
         public void Update(Product product)
         {
             throw new NotImplementedException();

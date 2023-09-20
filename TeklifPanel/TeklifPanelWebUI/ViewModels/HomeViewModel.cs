@@ -6,5 +6,6 @@ namespace TeklifPanelWebUI.ViewModels
     {
         public List<Offer> Offers { get; set; }
         public List<Log> Logs { get; set; }
+        public List<Customer> CustomerList { get; set; }
     }
 }

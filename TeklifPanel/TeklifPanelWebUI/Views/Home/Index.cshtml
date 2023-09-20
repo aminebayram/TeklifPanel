@@ -23,11 +23,11 @@
                 <div class="col-lg-3 col-md-3 col-12">
                     <div class="kutucuk" style="background-color: #26A69A;">
                         <div class="kutucuk-sayi">
-                            14
+                            @Model.Offers.Count()
                             <p>Gönderilmiş Teklif</p>
                         </div>
                         <div class="kutucuk-tarih">
-                            20.07.2023
+                            @DateTime.Now.ToShortDateString()
                         </div>
                     </div>
                 </div>
@@ -35,11 +35,11 @@
                 <div class="col-lg-3 col-md-3 col-12">
                     <div class="kutucuk" style="background-color: #EC407A;">
                         <div class="kutucuk-sayi">
-                            25
+                            @Model.CustomerList.Count()
                             <p>Müşteri</p>
                         </div>
                         <div class="kutucuk-tarih">
-                            20.07.2023
+                            @DateTime.Now.ToShortDateString()
                         </div>
                     </div>
                 </div>
@@ -51,7 +51,7 @@
                             <p>Gönderilmiş Teklif</p>
                         </div>
                         <div class="kutucuk-tarih">
-                            20.07.2023
+                            @DateTime.Now.ToShortDateString()
                         </div>
                     </div>
                 </div>
@@ -63,7 +63,7 @@
                             <p>Gönderilmiş Teklif</p>
                         </div>
                         <div class="kutucuk-tarih">
-                            20.07.2023
+                            @DateTime.Now.ToShortDateString()
                         </div>
                     </div>
                 </div>
@@ -88,7 +88,7 @@
                         </tr>
                     </thead>
                     <tbody class="table-hover">
-                        @foreach (var offer in Model.Offers)
+                        @foreach (var offer in Model.Offers.OrderByDescending(o => o.DateOfOffer).Take(10))
                         {
                             <tr>
                                 <td class="text-left">@offer.Customer.Name</td>
@@ -121,7 +121,7 @@
                         </tr>
                     </thead>
                     <tbody class="table-hover">
-                        @foreach (var log in Model.Logs)
+                        @foreach (var log in Model.Logs.OrderByDescending(l => l.DateOfLogin).Take(5))
                         {
                             <tr>
                                 <td class="text-left">@log.UserEmail</td>

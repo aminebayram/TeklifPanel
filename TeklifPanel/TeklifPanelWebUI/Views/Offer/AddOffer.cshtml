@@ -20,7 +20,7 @@
                 <div class="form-card">
 
                     <div class="row">
-                        <div class="col-7">
+                        <div class="col-7 mt-3">
                             <h2 class="fs-title">Müşteriler:</h2>
                         </div>
                         <div class="col-5">
@@ -44,7 +44,7 @@
                     </div>
                 </div>
 
-                <input type="button" name="next" class="next action-button" value="İLERİ" />
+                <input type="button" id="customerSelected" name="next" class="next action-button" value="İLERİ" disabled />
 
             </fieldset>
 
@@ -52,7 +52,7 @@
                 <div class="form-card">
 
                     <div class="row">
-                        <div class="col-4">
+                        <div class="col-4 mt-3">
                             <h2 class="fs-title">Ürünler:</h2>
                         </div>
                         <div class="col-4">
@@ -62,6 +62,9 @@
                         </div>
                     </div>
                     <div class="row">
+                        <div>
+                            <input name="search" id="searchVal" class="form-control mb-2" type="search" placeholder="Enter search word" aria-label="Search" onkeyup="search()">
+                        </div>
                         <div class="col-8">
                             <label for="categoryId" class="fieldlabels">Kategori Seçin:</label>
                             <select id="categoryId" onchange="getCategories()">
@@ -86,6 +89,7 @@
                                 </thead>
                                 <tbody class="table-hover" id="productList">
                                     @* PartialView - GetProducts *@
+                                    @*PartialView - SearchProduct*@
                                 </tbody>
                             </table>
                         </div>
@@ -98,7 +102,7 @@
                     </div>
                 </div>
 
-                <input type="button" id="nextButton" name="next" class="next action-button" value="İLERİ" onclick="sendSelectedProducts()" />
+                <input type="button" id="selectedProductButton" name="next" class="next action-button" value="İLERİ" onclick="sendSelectedProducts()" disabled />
                 <input type="button" name="previous" class="previous action-button-previous" value="GERİ" />
 
             </fieldset>
@@ -107,7 +111,7 @@
                 <div class="form-card">
 
                     <div class="row">
-                        <div class="col-7">
+                        <div class="col-7 mt-3">
                             <h2 class="fs-title">Ön İzleme:</h2>
                         </div>
                         <div class="col-5">
@@ -131,7 +135,7 @@
                 <div class="form-card">
 
                     <div class="row">
-                        <div class="col-7">
+                        <div class="col-7 mt-3">
                             <h2 class="fs-title">Tamamlandı:</h2>
                         </div>
                         <div class="col-5">
@@ -208,12 +212,38 @@
     }
 </script>
 
+@*Arama*@
+<script>
+    function search() {
+        let searchVal = $('#searchVal').val();
+        let selectedCustomerId = $('#customerId').val();
+
+        console.log(searchVal);
+        $.ajax({
+            url: '/Offer/Search?customerId=' + selectedCustomerId,
+            type: 'GET',
+            data: { searchWord: searchVal },
+            success: function (result) {
+                $("#productList").html(result);
+                let list = $('.temp');
+                for (let i = 0; i < list.length; i++) {
+                    let id = list[i].value;
+                    if (document.getElementById('selectedDiv' + id) != undefined) {
+                        $("#seletedItem" + id)[0].checked = true;
+                    }
+                }
+            }
+        });
+
+    }
+</script>
+
 @*Mail Gönderme*@
 <script>
     function captureDivToPdfAndPost() {
 
         let selectedCustomerId = $('#customerId').val();
-        let offerNumber = $('#orderNumber').text();
+        let offerNumber = $('#offerNumber').text();
         let selectedContactPersons = $("#contactPersons").val();
 
         // Div'i yakalayın
@@ -271,6 +301,7 @@
 
     function getContactPersonList() {
         let customerId = $("#customerId").val();
+        let customerSelectedButton = document.getElementById("customerSelected");
         $.ajax({
             type: "GET",
             url: "/Offer/ContactPersons?id=" + customerId,
@@ -278,6 +309,12 @@
                 $("#contactPersonList").html(data);
             }
         });
+        if (customerId !== "Seçiniz") {
+            customerSelectedButton.disabled = false;
+        } else {
+            customerSelectedButton.disabled = true;
+            alert('Lütfen bir Müsteri Seçiniz!');
+        }
     }
 </script>
 
@@ -289,7 +326,7 @@
 
         $.ajax({
             type: "GET",
-            url: "/Offer/GetProducts?id=" + categoryId,
+            url: "/Offer/GetProducts?categoryId=" + categoryId,
             data: {
                 customerId: selectedCustomerId,
             },
@@ -309,8 +346,13 @@
 
 @*Ürün seçme*@
 <script>
+    let selectedProductButton = document.getElementById('selectedProductButton');
+    let selectedProducts = document.getElementById('selectedProducts');
+    let mb4Divs;
+
     function isSelected(id) {
         let checkBox = document.getElementById('seletedItem' + id);
+
         if (checkBox.checked) {
             let categoryName = $('.seletedItem' + id)[0].innerText;
             let productName = $('.seletedItem' + id)[1].innerText;
@@ -319,52 +361,65 @@
             let categoryId = $("#categoryId").val();
             let selectedContactPersons = $("#contactPersons").val();
 
-
             var productHtml = `
-                                <div class=" mb-4 selectedDiv" id="selectedDiv${id}">
-                                    <input type="hidden" value="${id}" name="Id" />
-                                    <input type="hidden" value="${selectedCustomerId}" name="CustomerId" />
-                                    <input type="hidden" value="${categoryId}" name="CategoryId" />
-                                    <input type="hidden" value="${selectedContactPersons}" name="ContactPersonId" />
-                                    <div class="form-row row">
-                                        <div class="form-group col-lg-5 col-md-5 col-12">
-                                            <label >Ürün Kategori</label>
-                                            <label class="selectedDivItem${id}">${categoryName}</label>
-                                        </div>
-                                        <div class="form-group col-lg-5 col-md-5 col-12">
-                                            <label >Ürün Adı</label>
-                                            <label class="selectedDivItem${id}">${productName}</label>
-                                        </div>
-                                    </div>
-                                    <div class="form-row row">
-                                        <div class="form-group col-lg-5 col-md-5 col-12">
-                                            <label for="inputName">Adet</label>
-                                            <input type="number" id="Amount" class="form-control" name="Amount" placeholder="Adet" required />
-                                        </div>
-                                        <div class="form-group col-lg-5 col-md-5 col-12">
-                                            <label>İskonto</label>
-                                            <input type="text" id="Discount" class="form-control" name="Discount" placeholder="İskonto" value="${productDiscount}" required />
-                                        </div>
-                                        <div class="form-group col-lg-1 col-md-1 col-12">
-                                            <button class=" btn btn-danger  remove-contact" onclick="removeDiv(${id})" >Sil</button>
-                                        </div>
-                                    </div>
-                                <hr />
-                                </div>
-                                                `;
-            document.getElementById('selectedProducts').innerHTML += productHtml;
+                    <div class=" mb-4 selectedDiv" id="selectedDiv${id}">
+                        <input type="hidden" value="${id}" name="Id" />
+                        <input type="hidden" value="${selectedCustomerId}" name="CustomerId" />
+                        <input type="hidden" value="${categoryId}" name="CategoryId" />
+                        <input type="hidden" value="${selectedContactPersons}" name="ContactPersonId" />
+                        <div class="form-row row">
+                            <div class="form-group col-lg-5 col-md-5 col-12">
+                                <label >Ürün Kategori</label>
+                                <label class="selectedDivItem${id}">${categoryName}</label>
+                            </div>
+                            <div class="form-group col-lg-5 col-md-5 col-12">
+                                <label >Ürün Adı</label>
+                                <label class="selectedDivItem${id}">${productName}</label>
+                            </div>
+                        </div>
+                        <div class="form-row row">
+                            <div class="form-group col-lg-5 col-md-5 col-12">
+                                <label for="inputName">Adet</label>
+                                <input type="number" id="Amount" class="form-control" name="Amount" placeholder="Adet" />
+                            </div>
+                            <div class="form-group col-lg-5 col-md-5 col-12">
+                                <label>İskonto</label>
+                                <input type="text" id="Discount" class="form-control" name="Discount" placeholder="İskonto" value="${productDiscount}" />
+                            </div>
+                            <div class="form-group col-lg-1 col-md-1 col-12">
+                                <button class=" btn btn-danger  remove-contact" onclick="removeDiv(${id})" >Sil</button>
+                            </div>
+                        </div>
+                    <hr />
+                    </div>
+                        `;
+            //document.getElementById('selectedProducts').innerHTML += productHtml; // bu yöntem ile yapıldığında her ürün eklemede içerikler sıfırlanıyor!
+            selectedProducts.insertAdjacentHTML('beforeend', productHtml);
+
+            selectedProductButton.disabled = false;
 
         }
         else {
             document.getElementById('selectedDiv' + id).remove();
+            mb4Divs = selectedProducts.querySelectorAll(".mb-4");
+
+            if (mb4Divs.length > 0) {
+
+                selectedProductButton.disabled = false;
+            } else {
+
+                selectedProductButton.disabled = true;
+
+            }
         }
     }
+
 </script>
 
 @*Önizlme*@
 <script>
     function sendSelectedProducts() {
-        var formData = new FormData(document.querySelector('#seletectedProductsForm')); // Form verilerini al
+        let formData = new FormData(document.querySelector('#seletectedProductsForm')); // Form verilerini al
 
         $.ajax({
             url: '/Offer/OfferPreview', // İstek gönderilecek URL
@@ -381,6 +436,7 @@
                 console.error('Hata:', error);
             }
         });
+
     }
 
 </script>
@@ -388,7 +444,6 @@
 @*Seçilen ürünü kaldırma*@
 <script>
     function removeDiv(id) {
-        alert(id)
         document.getElementById('selectedDiv' + id).remove();
         document.getElementById('seletedItem' + id).checked = false;
     }

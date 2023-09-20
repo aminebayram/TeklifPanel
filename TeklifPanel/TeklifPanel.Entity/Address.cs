@@ -8,14 +8,10 @@ namespace TeklifPanel.Entity
 {
     public class Address : BaseEntity
     {
-        public Address()
-        {
-            Offers = new List<Offer>();
-        }
         public string Name { get; set; }
         public string OpenAddress { get; set; }
         public string AddressDetails { get; set; }
         public int CompanyId { get; set; }
-        public List<Offer> Offers { get; set; }
+
     }
 }

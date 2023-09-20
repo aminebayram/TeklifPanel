@@ -13,14 +13,12 @@
         </address>
     </div>
     <div class="span4 well">
-        <div class="fatura-baslik">
-            ÖNİZLEME
-        </div>
+
         <div class="fatura-no mt-4">
-            <strong>Teklif No:</strong><span id="orderNumber">@Model.OrderNumber</span>
+            <strong>Teklif No : </strong><span id="offerNumber">@Model.OfferNumber</span>
         </div>
         <div class="tarih mt-4">
-            <strong>Teklif Tarih:</strong>@DateTime.Now.ToShortDateString()
+            <strong>Teklif Tarih : </strong>@DateTime.Now.ToShortDateString()
         </div>
     </div>
 </div>
@@ -29,10 +27,19 @@
 
 <div class="musteri-bilgi">
     <h5 class="musterifir">
+
         @Model.Customer.Name
+
     </h5>
     <Strong>Sayın</Strong>
-    <p>@Model.CustomerContact.Name</p>
+    @if (Model.CustomerContactName == null)
+    {
+        <p>@Model.Customer.Name</p>
+    }
+    else
+    {
+        <p>@Model.CustomerContact.Name</p>
+    }
     <p class="adres">
         @Model.Customer.OpenAddress
     </p>
@@ -112,10 +119,9 @@
 
 <script>
     var mdl = @Html.Raw(Json.Serialize(Model.ProductsViewModel));
-    let totalPrice = 0;
-    let totalDiscount = 0;
-    let totalKdv = 0;
-
+    var totalPrice = 0;
+    var totalDiscount = 0;
+    var totalKdv = 0;
     for (let i = 0; i < mdl.length; i++) {
         let productId = mdl[i].id;
 

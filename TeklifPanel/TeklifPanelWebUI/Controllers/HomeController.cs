@@ -35,6 +35,7 @@ namespace TeklifPanelWebUI.Controllers
                 var userId = HttpContext.Session.GetString("UserId");
                 var offerList = await _offerService.GetCompanyOffersAsync(companyId);
                 var logList = await _logService.GetCompanyLogsAsync(companyId);
+                var customerList = await _customerService.GetCompanyByCustomersAsync(companyId);
 
                 var user = await _userManager.FindByIdAsync(userId);
 
@@ -43,7 +44,8 @@ namespace TeklifPanelWebUI.Controllers
                     var homeViewModel = new HomeViewModel()
                     {
                         Offers = offerList,
-                        Logs = logList
+                        Logs = logList,
+                        CustomerList = customerList.ToList()
                     };
 
                     return View(homeViewModel);

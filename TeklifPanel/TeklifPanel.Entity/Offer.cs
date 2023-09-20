@@ -13,26 +13,21 @@ namespace TeklifPanel.Entity
         {
             ProductOffers = new List<ProductOffer>();
         }
-        public DateTime DateOfSend  { get; set; } // Gönderme Tarihi
+        public DateTime DateOfOffer { get; set; }
         public DateTime DateOfForwarded { get; set; } // İletildi/teslime edildi tarihi
         public DateTime DateOfRead { get; set; } // Okundu tarihi
         public bool IsForwarded { get; set; } // İletildi mi?
         public bool IsRead { get; set; } // Okundu mu?
         public string Pdf { get; set; }
         public int OfferNumber { get; set; } //Teklif Numarasi
-        public decimal? BuyPrice { get; set; }
-        public decimal? SellPrice { get; set; }
-        public decimal? KDV { get; set; }
-        public DateTime DateOfOffer { get; set; }
         public Customer Customer { get; set; }
         public int CustomerId { get; set; }
-        //public Address Address { get; set; }
-        //public int AddressId { get; set; }
         public CustomerContact CustomerContact { get; set; }
         public int CustomerContactId { get; set; }
-        public List<ProductOffer>? ProductOffers { get; set; }
+        public List<ProductOffer> ProductOffers { get; set; }
         public User User { get; set; }
         public string UserId { get; set; }
         public int CompanyId { get; set; }
+        public decimal? Discount { get; set; }
     }
 }
