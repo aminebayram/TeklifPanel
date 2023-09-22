@@ -1,4 +1,7 @@
 ﻿@model List<Customer>
+@{
+    int page = 0;
+}
 
 <div class="container-fluid">
     <div class="card px-0 pb-0 mb-3">
@@ -67,7 +70,7 @@
                         </div>
                         <div class="col-8">
                             <label for="categoryId" class="fieldlabels">Kategori Seçin:</label>
-                            <select id="categoryId" onchange="getCategories()">
+                            <select id="categoryId" c onchange="getCategories()">
                                 <option>Seçiniz</option>
                                 @foreach (var category in (List<Category>)ViewBag.Categories)
                                 {
@@ -358,45 +361,45 @@
             let productName = $('.seletedItem' + id)[1].innerText;
             let productDiscount = $('.seletedItem' + id)[2].innerText;
             let selectedCustomerId = $('#customerId').val();
-            let categoryId = $("#categoryId").val();
             let selectedContactPersons = $("#contactPersons").val();
 
             var productHtml = `
-                    <div class=" mb-4 selectedDiv" id="selectedDiv${id}">
-                        <input type="hidden" value="${id}" name="Id" />
-                        <input type="hidden" value="${selectedCustomerId}" name="CustomerId" />
-                        <input type="hidden" value="${categoryId}" name="CategoryId" />
-                        <input type="hidden" value="${selectedContactPersons}" name="ContactPersonId" />
-                        <div class="form-row row">
-                            <div class="form-group col-lg-5 col-md-5 col-12">
-                                <label >Ürün Kategori</label>
-                                <label class="selectedDivItem${id}">${categoryName}</label>
-                            </div>
-                            <div class="form-group col-lg-5 col-md-5 col-12">
-                                <label >Ürün Adı</label>
-                                <label class="selectedDivItem${id}">${productName}</label>
-                            </div>
-                        </div>
-                        <div class="form-row row">
-                            <div class="form-group col-lg-5 col-md-5 col-12">
-                                <label for="inputName">Adet</label>
-                                <input type="number" id="Amount" class="form-control" name="Amount" placeholder="Adet" />
-                            </div>
-                            <div class="form-group col-lg-5 col-md-5 col-12">
-                                <label>İskonto</label>
-                                <input type="text" id="Discount" class="form-control" name="Discount" placeholder="İskonto" value="${productDiscount}" />
-                            </div>
-                            <div class="form-group col-lg-1 col-md-1 col-12">
-                                <button class=" btn btn-danger  remove-contact" onclick="removeDiv(${id})" >Sil</button>
-                            </div>
-                        </div>
-                    <hr />
-                    </div>
-                        `;
+                                                                                                                                        <div class=" mb-4 selectedDiv" id="selectedDiv${id}">
+                                                                                                                                            <input type="hidden" value="${id}" name="Id" />
+                                                                                                                                            <input type="hidden" value="${selectedCustomerId}" name="CustomerId" />
+                                                                                                                                            <input type="hidden" value="${selectedContactPersons}" name="ContactPersonId" />
+                                                                                                                                            <div class="form-row row">
+                                                                                                                                                <div class="form-group col-lg-5 col-md-5 col-12">
+                                                                                                                                                    <label >Ürün Kategori</label>
+                                                                                                                                                    <label class="selectedDivItem${id}">${categoryName}</label>
+                                                                                                                                                </div>
+                                                                                                                                                <div class="form-group col-lg-5 col-md-5 col-12">
+                                                                                                                                                    <label >Ürün Adı</label>
+                                                                                                                                                    <label class="selectedDivItem${id}">${productName}</label>
+                                                                                                                                                </div>
+                                                                                                                                            </div>
+                                                                                                                                            <div class="form-row row">
+                                                                                                                                                <div class="form-group col-lg-5 col-md-5 col-12">
+                                                                                                                                                    <label for="inputName">Adet</label>
+                                                                                                                                                    <input type="number" id="Amount" class="form-control amounts" name="Amount" placeholder="Adet" />
+                                                                                                                                                </div>
+                                                                                                                                                <div class="form-group col-lg-5 col-md-5 col-12">
+                                                                                                                                                    <label>İskonto</label>
+                                                                                                                                                    <input type="text" id="Discount" class="form-control" name="Discount" placeholder="İskonto" value="${productDiscount}" />
+                                                                                                                                                </div>
+                                                                                                                                                <div class="form-group col-lg-1 col-md-1 col-12">
+                                                                                                                                                    <button class=" btn btn-danger  remove-contact" onclick="removeDiv(${id})" >Sil</button>
+                                                                                                                                                </div>
+                                                                                                                                            </div>
+                                                                                                                                        <hr />
+                                                                                                                                        </div>
+                                                                                                                                            `;
             //document.getElementById('selectedProducts').innerHTML += productHtml; // bu yöntem ile yapıldığında her ürün eklemede içerikler sıfırlanıyor!
             selectedProducts.insertAdjacentHTML('beforeend', productHtml);
 
             selectedProductButton.disabled = false;
+
+            var ctrl = 1;
 
         }
         else {
@@ -419,6 +422,8 @@
 @*Önizlme*@
 <script>
     function sendSelectedProducts() {
+
+
         let formData = new FormData(document.querySelector('#seletectedProductsForm')); // Form verilerini al
 
         $.ajax({
@@ -436,8 +441,10 @@
                 console.error('Hata:', error);
             }
         });
-
     }
+
+
+
 
 </script>
 
@@ -458,38 +465,53 @@
         var opacity;
         var current = 1;
         var steps = $("fieldset").length;
-
+        var page = 0;
+       
         setProgressBar(current);
 
         $(".next").click(function () {
+            var ctrl = 1;
+            if (page.valueOf() == 1) {
+                var amounts = document.querySelectorAll(".amounts");
+                amounts.forEach(function (currentValue) {
+                    var elem = currentValue.value;
+                    if (elem == "") {
+                        ctrl = 0;
+                    }
+                });
+            }
+         
+            if (ctrl == 0) {
+                Swal.fire('Adet alanları zorunludur!')
+            } else {
+                current_fs = $(this).parent();
+                next_fs = $(this).parent().next();
+                page = page + 1;
+                //Add Class Active
+                $("#progressbar li").eq($("fieldset").index(next_fs)).addClass("active");
 
-            current_fs = $(this).parent();
-            next_fs = $(this).parent().next();
+                //show the next fieldset
+                next_fs.show();
+                //hide the current fieldset with style
+                current_fs.animate({ opacity: 0 }, {
+                    step: function (now) {
+                        // for making fielset appear animation
+                        opacity = 1 - now;
 
-            //Add Class Active
-            $("#progressbar li").eq($("fieldset").index(next_fs)).addClass("active");
-
-            //show the next fieldset
-            next_fs.show();
-            //hide the current fieldset with style
-            current_fs.animate({ opacity: 0 }, {
-                step: function (now) {
-                    // for making fielset appear animation
-                    opacity = 1 - now;
-
-                    current_fs.css({
-                        'display': 'none',
-                        'position': 'relative'
-                    });
-                    next_fs.css({ 'opacity': opacity });
-                },
-                duration: 500
-            });
-            setProgressBar(++current);
+                        current_fs.css({
+                            'display': 'none',
+                            'position': 'relative'
+                        });
+                        next_fs.css({ 'opacity': opacity });
+                    },
+                    duration: 500
+                });
+                setProgressBar(++current);
+            }
         });
 
         $(".previous").click(function () {
-
+            page = page - 1;
             current_fs = $(this).parent();
             previous_fs = $(this).parent().prev();
 

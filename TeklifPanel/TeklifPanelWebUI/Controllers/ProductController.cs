@@ -166,21 +166,13 @@ namespace TeklifPanelWebUI.Controllers
 
         public async Task<IActionResult> DeleteProduct(int id)
         {
-            var product = await _productService.GetProductByIdAsync(id);
             var isDeleteProduct = await _productService.DeleteProductAsync(id);
-            if (isDeleteProduct)
-            {
-                TempData["Message"] = $"'{product.Name}' adlı ürün silindi";
-                return RedirectToAction("ProductList");
-            }
-
-            TempData["Error"] = $"'{product.Name}' adlı ürün silininedi";
-            return RedirectToAction("ProductList");
+            var status = isDeleteProduct ? 200 : 400;
+            return Json(new { status = status });
         }
 
         public async Task<IActionResult> DeleteProductImage(int id)
         {
-            var companyId = HttpContext.Session.GetInt32("CompanyId") ?? default;
             var image = await _imageService.GetByIdAsync(id);
             if (image == null)
             {

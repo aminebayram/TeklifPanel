@@ -31,7 +31,6 @@ namespace TeklifPanelWebUI.Controllers
             if (User.Identity.IsAuthenticated)
             {
                 var companyId = HttpContext.Session.GetInt32("CompanyId") ?? default;
-                var company = await _companyService.GetByIdAsync(companyId);
                 var userId = HttpContext.Session.GetString("UserId");
                 var offerList = await _offerService.GetCompanyOffersAsync(companyId);
                 var logList = await _logService.GetCompanyLogsAsync(companyId);

@@ -98,7 +98,7 @@ namespace TeklifPanelWebUI.Controllers
             return View(productViewModel);
         }
 
-        public async Task<IActionResult> OfferPreview(List<int> Amount, List<decimal> Discount, int CustomerId, List<int> Id, List<int> CategoryId, int ContactPersonId)
+        public async Task<IActionResult> OfferPreview(List<int> Amount, List<decimal> Discount, int CustomerId, List<int> Id,  int ContactPersonId)
         {
             Random random = new Random();
 
@@ -116,7 +116,7 @@ namespace TeklifPanelWebUI.Controllers
             for (int i = 0; i < Id.Count(); i++)
             {
                 var selectedProduct = await _productService.GetProductByIdAsync(Id[i]);
-                var selectedCategory = await _categoryService.GetByIdAsync(CategoryId[i]);
+                var selectedCategory = await _categoryService.GetByIdAsync(selectedProduct.CategoryId);
                 selectecProductList.Add(new ProductViewModel()
                 {
                     Id = selectedProduct.Id,

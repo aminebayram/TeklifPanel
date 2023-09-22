@@ -1,14 +1,15 @@
 ﻿<!-- Sidebar  -->
+@model LeftMenuModel
 <nav id="sidebar">
     <div class="sidebar-header">
-        <img src="/Content/images/logo/pantek-logo.png" alt="" width="100%">
+        <img src="@Jobs.ImageRoute@Model.CompanyId/@Model.Logo" alt="" width="100%">
     </div>
 
+    <p>
+        <div class="text-center">Hoşgeldiniz Sayın</div>
+        <div class="text-center">@Model.UserName</div>
+    </p>
     <ul class="list-unstyled components">
-        <p>
-            Hoşgeldiniz Sayın
-            İNFO@FİRMA.COM
-        </p>
         <li>
             <a asp-controller="Home" asp-action="Index"><i class="fas fa-home"></i> Anasayfa</a>
         </li>
@@ -29,7 +30,7 @@
                     <li>
                         <a asp-controller="SuperAdmin" asp-action="CompanyCreate">Firma Oluştur</a>
                     </li>
-                    @*                    <li>
+                    @*<li>
                 <a asp-controller="SuperAdmin" asp-action="RoleList">Rol Listesi</a>
                 </li>
                 <li>
