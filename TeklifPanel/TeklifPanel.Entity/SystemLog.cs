@@ -14,7 +14,6 @@ namespace TeklifPanel.Entity
         public DateTime DateTime { get; set; }
         public string Description { get; set; }
         public bool IsRegisted { get; set; }
-        public int CompanyId { get; set; }
 
     }
 }

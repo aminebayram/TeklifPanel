@@ -10,6 +10,5 @@ namespace TeklifPanel.Entity
     {
         public string UserEmail { get; set; }
         public DateTime DateOfLogin { get; set; }
-        public int CompanyId { get; set; }
     }
 }

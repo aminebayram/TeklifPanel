@@ -12,6 +12,5 @@ namespace TeklifPanel.Entity
         public string Value { get; set; }
         public string Type { get; set; }
         public string Title { get; set; }
-        public int CompanyId { get; set; }
     }
 }

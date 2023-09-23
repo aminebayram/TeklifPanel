@@ -32,9 +32,9 @@ namespace TeklifPanelWebUI.Controllers
             {
                 var companyId = HttpContext.Session.GetInt32("CompanyId") ?? default;
                 var userId = HttpContext.Session.GetString("UserId");
-                var offerList = await _offerService.GetCompanyOffersAsync(companyId);
+                var offerList = await _offerService.GetCompanyOffersAsync(companyId) ?? new List<Offer>();
                 var logList = await _logService.GetCompanyLogsAsync(companyId);
-                var customerList = await _customerService.GetCompanyByCustomersAsync(companyId);
+                var customerList = await _customerService.GetCompanyByCustomersAsync(companyId) ?? new List<Customer>();
 
                 var user = await _userManager.FindByIdAsync(userId);
 

@@ -19,6 +19,5 @@ namespace TeklifPanel.Entity
         public Customer Customer { get; set; }
         public int CustomerId { get; set; }
         public List<Offer> Offers { get; set; }
-        public int CompanyId { get; set; }
     }
 }

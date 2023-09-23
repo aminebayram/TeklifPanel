@@ -27,7 +27,6 @@ namespace TeklifPanel.Entity
         public List<ProductOffer> ProductOffers { get; set; }
         public User User { get; set; }
         public string UserId { get; set; }
-        public int CompanyId { get; set; }
         public decimal? Discount { get; set; }
     }
 }

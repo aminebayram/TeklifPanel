@@ -19,7 +19,6 @@ namespace TeklifPanel.Entity
         public string Note { get; set; }
         public string Phone { get; set; }
         public decimal? Discount { get; set; } // İskonto
-        public int CompanyId { get; set; }
         public List<CustomerContact> CustomerContacts { get; set; }
         public List<Offer> Offers { get; set; }
         public string OpenAddress { get; set; }
