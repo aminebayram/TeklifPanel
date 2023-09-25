@@ -49,7 +49,7 @@ namespace TeklifPanelWebUI.Controllers
 
                     return View(homeViewModel);
                 }
-                return View();
+                return RedirectToAction("Index", "Login");
             }
             else
             {

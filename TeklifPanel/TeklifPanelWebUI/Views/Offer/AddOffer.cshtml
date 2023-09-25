@@ -64,11 +64,10 @@
                             <h2 class="steps">Adım 2 - 4</h2>
                         </div>
                     </div>
-                    <div class="row">
                         <div>
                             <input name="search" id="searchVal" class="form-control mb-2" type="search" placeholder="Enter search word" aria-label="Search" onkeyup="search()">
                         </div>
-                        <div class="col-8">
+                        <div>
                             <label for="categoryId" class="fieldlabels">Kategori Seçin:</label>
                             <select id="categoryId" c onchange="getCategories()">
                                 <option>Seçiniz</option>
@@ -77,32 +76,37 @@
                                     <option value="@category.Id">@category.Name</option>
                                 }
                             </select>
-                            <table class="table-fill">
-                                <thead>
-                                    <tr>
-                                        <th class="text-center">Kategori</th>
-                                        <th class="text-center">Ürün Adı</th>
-                                        <th class="text-center">Kod</th>
-                                        <th class="text-center">Fiyat</th>
-                                        <th class="text-center">Fotoğraf</th>
-                                        <th class="text-center">Stok</th>
-                                        <th class="text-center">İskonto</th>
-                                        <th class="text-center">Ekle</th>
-                                    </tr>
-                                </thead>
-                                <tbody class="table-hover" id="productList">
-                                    @* PartialView - GetProducts *@
-                                    @*PartialView - SearchProduct*@
-                                </tbody>
-                            </table>
+                        <div class="row">
+                            <div class="col-xl-8 col-lg-12 col-md-12 col-12 table-responsive">
+                                <table class="table-fill">
+                                    <thead>
+                                        <tr>
+                                            <th class="text-center">Kategori</th>
+                                            <th class="text-center">Ürün Adı</th>
+                                            <th class="text-center">Kod</th>
+                                            <th class="text-center">Fiyat</th>
+                                            <th class="text-center">Fotoğraf</th>
+                                            <th class="text-center">Stok</th>
+                                            <th class="text-center">İskonto</th>
+                                            <th class="text-center">Ekle</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody class="table-hover" id="productList">
+                                        @* PartialView - GetProducts *@
+                                        @*PartialView - SearchProduct*@
+                                    </tbody>
+                                </table>
+
+                            </div>
+                            <div class="col-xl-4 col-lg-12 col-md-12 col-12">
+                                <form asp-controller="Offer" asp-action="OfferPreview" method="post" id="seletectedProductsForm">
+                                    <div id="selectedProducts">
+                                    </div>
+                                </form>
+                            </div>
                         </div>
-                        <div class="col-4">
-                            <form asp-controller="Offer" asp-action="OfferPreview" method="post" id="seletectedProductsForm">
-                                <div id="selectedProducts">
-                                </div>
-                            </form>
                         </div>
-                    </div>
+                        
                 </div>
 
                 <input type="button" id="selectedProductButton" name="next" class="next action-button" value="İLERİ" onclick="sendSelectedProducts()" disabled />
@@ -248,6 +252,7 @@
         let selectedCustomerId = $('#customerId').val();
         let offerNumber = $('#offerNumber').text();
         let selectedContactPersons = $("#contactPersons").val();
+        let total = $("#total").text();
 
         // Div'i yakalayın
         var divToCapture = document.getElementById('productPreview');
@@ -275,7 +280,7 @@
             // POST isteğini oluşturun
             var xhr = new XMLHttpRequest();
             //xhr.open('POST', '/Offer/SendMail?CustomerId=' + selectedCustomerId + "&OrderNumber=" + orderNumber, true);
-            xhr.open('POST', `/Offer/SendMail?CustomerId=${selectedCustomerId}&OfferNumber=${offerNumber}&ContactPersonId=${selectedContactPersons}`, true);
+            xhr.open('POST', `/Offer/SendMail?CustomerId=${selectedCustomerId}&OfferNumber=${offerNumber}&ContactPersonId=${selectedContactPersons}&Total=${total}`, true);
 
             // İsteği gönderin
             xhr.send(formData);
@@ -364,27 +369,27 @@
             let selectedContactPersons = $("#contactPersons").val();
 
             var productHtml = `
-                                                                                                                                        <div class=" mb-4 selectedDiv" id="selectedDiv${id}">
+                                                                                                                                            <div class="selectedDiv" id="selectedDiv${id}" style="font-size: 15px;">
                                                                                                                                             <input type="hidden" value="${id}" name="Id" />
                                                                                                                                             <input type="hidden" value="${selectedCustomerId}" name="CustomerId" />
                                                                                                                                             <input type="hidden" value="${selectedContactPersons}" name="ContactPersonId" />
                                                                                                                                             <div class="form-row row">
                                                                                                                                                 <div class="form-group col-lg-5 col-md-5 col-12">
-                                                                                                                                                    <label >Ürün Kategori</label>
+                                                                                                                                                    <label> <b>Ürün Kategori </b></label>
                                                                                                                                                     <label class="selectedDivItem${id}">${categoryName}</label>
                                                                                                                                                 </div>
                                                                                                                                                 <div class="form-group col-lg-5 col-md-5 col-12">
-                                                                                                                                                    <label >Ürün Adı</label>
+                                                                                                                                                            <label> <b>Ürün Adı </b></label><br/>
                                                                                                                                                     <label class="selectedDivItem${id}">${productName}</label>
                                                                                                                                                 </div>
                                                                                                                                             </div>
                                                                                                                                             <div class="form-row row">
                                                                                                                                                 <div class="form-group col-lg-5 col-md-5 col-12">
-                                                                                                                                                    <label for="inputName">Adet</label>
+                                                                                                                                                            <label for="inputName"> <b>Adet </b></label>
                                                                                                                                                     <input type="number" id="Amount" class="form-control amounts" name="Amount" placeholder="Adet" />
                                                                                                                                                 </div>
                                                                                                                                                 <div class="form-group col-lg-5 col-md-5 col-12">
-                                                                                                                                                    <label>İskonto</label>
+                                                                                                                                                            <label> <b>İskonto</b></label>
                                                                                                                                                     <input type="text" id="Discount" class="form-control" name="Discount" placeholder="İskonto" value="${productDiscount}" />
                                                                                                                                                 </div>
                                                                                                                                                 <div class="form-group col-lg-1 col-md-1 col-12">

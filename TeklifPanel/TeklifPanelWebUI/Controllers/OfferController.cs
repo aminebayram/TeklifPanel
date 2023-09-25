@@ -160,7 +160,7 @@ namespace TeklifPanelWebUI.Controllers
         }
 
         [HttpPost]
-        public async Task<IActionResult> SendMail(IFormFile pdfFile, int CustomerId, int OfferNumber, int ContactPersonId, List<decimal> Discount)
+        public async Task<IActionResult> SendMail(IFormFile pdfFile, int CustomerId, int OfferNumber, int ContactPersonId, string Total)
         {
             var companyId = HttpContext.Session.GetInt32("CompanyId") ?? default;
             var userId = HttpContext.Session.GetString("UserId") ?? default;
