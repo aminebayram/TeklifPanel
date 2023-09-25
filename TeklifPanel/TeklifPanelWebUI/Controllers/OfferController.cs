@@ -256,7 +256,7 @@ namespace TeklifPanelWebUI.Controllers
                 DateOfOffer = DateTime.Now,
                 UserId = user.Id,
                 CustomerContact = contactPerson,
-                OfferNumber = OfferNumber
+                OfferNumber = OfferNumber,
             };
 
             var result = await _offerService.CreateAsync(offer);

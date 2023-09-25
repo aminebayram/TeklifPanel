@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using TeklifPanel.Data.Concrete.EfCore;
 
@@ -11,9 +12,11 @@ using TeklifPanel.Data.Concrete.EfCore;
 namespace TeklifPanel.Data.Migrations
 {
     [DbContext(typeof(TeklifPanelContext))]
-    partial class TeklifPanelContextModelSnapshot : ModelSnapshot
+    [Migration("20230925152137_AddOffer_TotalPrice_250923")]
+    partial class AddOffer_TotalPrice_250923
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
