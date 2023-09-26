@@ -47,8 +47,8 @@
                 <div class="col-lg-3 col-md-3 col-12">
                     <div class="kutucuk" style="background-color: #FFA726;">
                         <div class="kutucuk-sayi">
-                            14
-                            <p>Gönderilmiş Teklif</p>
+                            @Model?.Offers.Select(o => o.TotalPrice).Sum() TL
+                            <p>Gönderilen Toplam Teklif Tutarı</p>
                         </div>
                         <div class="kutucuk-tarih">
                             @DateTime.Now.ToShortDateString()
@@ -84,6 +84,7 @@
                             <th class="text-left">Gönderici</th>
                             <th class="text-left">Gönderme Saati</th>
                             <th class="text-left">İskonto</th>
+                            <th class="text-left">Toplam Tutar</th>
                             <th class="text-left">Görüntüle</th>
                         </tr>
                     </thead>
@@ -95,7 +96,8 @@
                                 <td class="text-left">@offer.CustomerContact.Name</td>
                                 <td class="text-left">@offer.User.FirstName</td>
                                 <td class="text-left">@offer.DateOfOffer</td>
-                                <td class="text-left">@offer.Customer.Discount</td>
+                                <td class="text-left">@offer.Discount</td>
+                                <td class="text-left">@offer.TotalPrice</td>
                                 <td class="text-left">
                                     <a href="@Jobs.PdfRoute@offer.CompanyId/@offer.Pdf" target="_blank">
                                         <i class="fas fa-eye"></i>

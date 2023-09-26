@@ -12,8 +12,8 @@ using TeklifPanel.Entity;
 var builder = WebApplication.CreateBuilder(args);
 
 //builder.Services.AddDbContext<TeklifPanelContext>(options => options.UseSqlServer(builder.Configuration.GetConnectionString("SqlServerConnectionLocal")));
-builder.Services.AddDbContext<TeklifPanelContext>(options => options.UseSqlServer(builder.Configuration.GetConnectionString("SqlServerConnectionTest")));
-//builder.Services.AddDbContext<TeklifPanelContext>(options => options.UseSqlServer(builder.Configuration.GetConnectionString("SqlServerConnection")));
+//builder.Services.AddDbContext<TeklifPanelContext>(options => options.UseSqlServer(builder.Configuration.GetConnectionString("SqlServerConnectionTest")));
+builder.Services.AddDbContext<TeklifPanelContext>(options => options.UseSqlServer(builder.Configuration.GetConnectionString("SqlServerConnection")));
 builder.Services.AddIdentity<User, IdentityRole>().AddEntityFrameworkStores<TeklifPanelContext>().AddDefaultTokenProviders();
 
 builder.Services.AddSession();
@@ -29,7 +29,7 @@ builder.Services.ConfigureApplicationCookie(options =>
     //options.LogoutPath = "/account/logout"; // çýkýþ yaptýktan sonra gidilecek sayfaya yönlendirir
     //options.AccessDeniedPath = "/account/accessdenied"; // yetkisiz giriþ sýrasýnda yönlendirilecek sayfa
     //options.SlidingExpiration = true; // çýkýþ için varsayýlan olan 20 dknýn her istekte sýfýrlanamsýný saðlýyoruz.
-    options.ExpireTimeSpan = TimeSpan.FromMinutes(1); // varsayýlan olan 20 dk lýk süreyi bu kod ile 10 dk süreye düþürür.
+    options.ExpireTimeSpan = TimeSpan.FromMinutes(10); // varsayýlan olan 20 dk lýk süreyi bu kod ile 10 dk süreye düþürür.
 
 });
 

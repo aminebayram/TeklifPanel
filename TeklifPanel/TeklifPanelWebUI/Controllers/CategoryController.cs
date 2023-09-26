@@ -61,15 +61,9 @@ namespace TeklifPanelWebUI.Controllers
 
         public async Task<IActionResult> DeleteCategory(int id)
         {
-            var category = await _categoryService.GetByIdAsync(id);
             var isDeletedCategory = await _categoryService.DeleteCategoryAsync(id);
-            if (isDeletedCategory)
-            {
-                TempData["Message"] = $"'{category.Name}' adlı ürün silindi";
-                return RedirectToAction("CategoryList");
-            }
-            TempData["Error"] = $"'{category.Name}' adlı ürün silininedi";
-            return RedirectToAction("CategoryList");
+            var status = isDeletedCategory ? 200 : 400;
+            return Json(new { status = status });
         }
 
         [HttpGet]

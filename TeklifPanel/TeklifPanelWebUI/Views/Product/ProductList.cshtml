@@ -19,17 +19,20 @@
     <div class="col-lg-5 col-md-4 col-12">
         <div class="table-title">
             <h3>
-                Kategorisindeki Ürünler
+                Ürünler
             </h3>
         </div>
     </div>
 
     <div class="col-lg-2 col-md-4 col-12">
+
         <div class="dropdown kat">
             <div class="dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false">
                 Ürün Kategorileri
             </div>
+
             <ul class="dropdown-menu">
+                <li><a class="dropdown-item" href="/Product/ProductList">Tüm Ürünler</a></li>
                 @foreach (var category in (List<Category>)ViewBag.Categories)
                 {
                     <li><a class="dropdown-item" href="/Product/ProductList/@category.Id">@category.Name</a></li>
@@ -41,7 +44,7 @@
     <div class="col-lg-5 col-md-4 col-12 ekleme">
 
         <div class="search">
-            <input type="text" class="searchTerm" placeholder="Arama Yapın">
+            <input type="text" class="searchTerm" id="search" placeholder="Arama Yapın" onkeyup="searchWord()">
             <button type="submit" class="searchButton">
                 <i class="fa fa-search"></i>
             </button>
@@ -63,6 +66,7 @@
         </tr>
     </thead>
     <tbody class="table-hover">
+        @*PartialView - Search*@
         @foreach (var product in Model)
         {
             <tr>
@@ -93,8 +97,27 @@
     </tbody>
 </table>
 
+
+@*Ürün Arama*@
 <script>
-    function deleteProduct(id){
+    function searchWord() {
+        let searchVal = $('#search').val();
+
+        $.ajax({
+            type: 'POST',
+            url: '/Product/Search',
+            data: { searchWord: searchVal },
+            success: function (result){
+                let table = $('.table-hover').html(result);
+
+            }
+        });
+    }
+</script>
+
+@*Ürün silme işlemi*@
+<script>
+    function deleteProduct(id) {
         Swal.fire({
             title: 'Silmek istediğinize emin misiniz?',
             text: "İlgili ürün kalıcı olarak silinecek!",
@@ -108,7 +131,7 @@
                 $.ajax({
                     type: 'POST',
                     url: '/Product/DeleteProduct',
-                    data: { id: id },                  
+                    data: { id: id },
                     success: function (res) {
                         console.log(res.status);
                         if (res.status == 200) {

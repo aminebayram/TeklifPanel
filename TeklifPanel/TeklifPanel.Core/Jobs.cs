@@ -24,8 +24,7 @@ namespace TeklifPanel.Core
             var randomName = $"{url}-{Guid.NewGuid()}{extension}";
 
             var folderPath = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot/Content/images/C" + companyId);
-            Directory.CreateDirectory(folderPath); // Klasörü oluşturur
-
+            Directory.CreateDirectory(folderPath); 
             var path = Path.Combine(folderPath, randomName);
 
             using (var stream = new FileStream(path, FileMode.Create))

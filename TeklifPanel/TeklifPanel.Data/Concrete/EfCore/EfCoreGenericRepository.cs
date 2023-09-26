@@ -18,8 +18,17 @@ namespace TeklifPanel.Data.Concrete.EfCore
         }
         public async void Create(TEntity entity)
         {
-            await _dbContext.AddAsync(entity);
-            await _dbContext.SaveChangesAsync();
+            try
+            {
+                await _dbContext.AddAsync(entity);
+                await _dbContext.SaveChangesAsync();
+            }
+            catch (Exception e)
+            {
+
+                throw;
+            }
+
         }
 
         public void Delete(TEntity entity)

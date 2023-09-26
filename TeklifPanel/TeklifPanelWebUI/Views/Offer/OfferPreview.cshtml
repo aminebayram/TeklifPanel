@@ -111,6 +111,7 @@
                 </tr>
             </tbody>
         </table>
+        <input type="hidden" id="discount" />
     </div>
 </div>
 <div class="fatura-not">
@@ -119,9 +120,12 @@
 
 <script>
     var mdl = @Html.Raw(Json.Serialize(Model.ProductsViewModel));
+
     var totalPrice = 0;
     var totalDiscount = 0;
+    var totalDiscountPrice = 0;
     var totalKdv = 0;
+
     for (let i = 0; i < mdl.length; i++) {
         let productId = mdl[i].id;
 
@@ -144,15 +148,18 @@
         let replace_discountPriceText = discountPriceText.replace(',', '.');
         let discountPrice = parseFloat(replace_discountPriceText);
 
+        totalDiscount += discount;
         totalPrice = totalPrice + (sellPrice * amount);
-        totalDiscount += discountPrice;
+        totalDiscountPrice += discountPrice;
         totalKdv = (amount * sellPrice * (kdv / 100)) + totalKdv;
-        total = totalDiscount + totalKdv;
+        total = totalDiscountPrice + totalKdv;
+
     }
 
     $('#totalPrice').text(totalPrice.toFixed(2));
-    $('#totalDiscount').text(totalDiscount.toFixed(2));
+    $('#totalDiscount').text(totalDiscountPrice.toFixed(2));
     $('#totalKdv').text(totalKdv.toFixed(2));
     $('#total').text(total.toFixed(2));
-
+    $('#discount').val(totalDiscount.toFixed(2));
+    console.log(totalDiscount);
 </script>

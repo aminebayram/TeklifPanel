@@ -58,16 +58,29 @@ namespace TeklifPanel.Data.Concrete.EfCore
             return productList;
         }
 
-        public async Task<List<Product>> GetSearchProduct(int companyId, string searchWord)
+        public async Task<List<Product>> GetSearchProduct(int? companyId, string searchWord)
         {
-            var productList = await context.Products
-                .Where(p => p.CompanyId == companyId && p.IsActive == true && p.Name.Contains(searchWord))
-                .Include(p => p.ProductImages)
-                .Include(p => p.Category)
-                .ToListAsync();
+            if (companyId != null)
+            {
+                var productList = await context.Products
+                    .Where(p => p.CompanyId == companyId && p.IsActive == true && p.Name.Contains(searchWord))
+                    .Include(p => p.ProductImages)
+                    .Include(p => p.Category)
+                    .Take(10)
+                    .ToListAsync();
+                return productList;
 
-            return productList;
-                
+            }
+            else
+            {
+                var productList = await context.Products
+                    .Where(p => p.IsActive == true && p.Name.Contains(searchWord))
+                    .Include(p => p.ProductImages)
+                    .Include(p => p.Category)
+                    .Take(10)
+                    .ToListAsync();
+                return productList;
+            }
         }
     }
 }

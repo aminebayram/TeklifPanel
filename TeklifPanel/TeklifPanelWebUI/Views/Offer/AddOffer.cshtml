@@ -69,7 +69,7 @@
                         </div>
                         <div>
                             <label for="categoryId" class="fieldlabels">Kategori Seçin:</label>
-                            <select id="categoryId" c onchange="getCategories()">
+                            <select id="categoryId" onchange="getCategories()">
                                 <option>Seçiniz</option>
                                 @foreach (var category in (List<Category>)ViewBag.Categories)
                                 {
@@ -133,7 +133,6 @@
                 </div>
 
                 <input type="button" name="next" class="next action-button" value="GÖNDER" onclick="captureDivToPdfAndPost()" />
-                <button onclick="demoFromHTML()">PDF Oluştur</button>
                 <input type="button" name="previous" class="previous action-button-previous" value="GERİ" />
 
             </fieldset>
@@ -171,22 +170,6 @@
 
 <script>
     function demoFromHTML() {
-
-        //const content = document.getElementById("productPreview");
-        //const canvas = document.createElement("canvas");
-        //const context = canvas.getContext("2d");
-
-        //// Canvas boyutlarını ayarlayın (isteğe bağlı)
-        //canvas.width = 800;
-        //canvas.height = 600;
-
-        //// HTML içeriğini canvas'a çizin
-        //html2canvas(content).then((canvas) => {
-        //    // Canvas'tan PDF oluşturun
-        //    const pdf = new jsPDF("p", "mm", "a4");
-        //    pdf.addImage(canvas.toDataURL("image/png"), "PNG", 0, 0, 210, 297); // A4 boyutunda bir PDF olarak ayarlayabilirsiniz
-        //    pdf.save("urunler.pdf");
-        //});
 
         var pdf = new jsPDF('p', 'pt', 'letter');
         // 'A4' belge türü ve 'landscape' yönlendirme
@@ -253,6 +236,7 @@
         let offerNumber = $('#offerNumber').text();
         let selectedContactPersons = $("#contactPersons").val();
         let total = $("#total").text();
+        let discount = $("#discount").val();
 
         // Div'i yakalayın
         var divToCapture = document.getElementById('productPreview');
@@ -280,7 +264,7 @@
             // POST isteğini oluşturun
             var xhr = new XMLHttpRequest();
             //xhr.open('POST', '/Offer/SendMail?CustomerId=' + selectedCustomerId + "&OrderNumber=" + orderNumber, true);
-            xhr.open('POST', `/Offer/SendMail?CustomerId=${selectedCustomerId}&OfferNumber=${offerNumber}&ContactPersonId=${selectedContactPersons}&Total=${total}`, true);
+            xhr.open('POST', `/Offer/SendMail?CustomerId=${selectedCustomerId}&OfferNumber=${offerNumber}&ContactPersonId=${selectedContactPersons}&Total=${total}&Discount=${discount}`, true);
 
             // İsteği gönderin
             xhr.send(formData);
@@ -369,36 +353,36 @@
             let selectedContactPersons = $("#contactPersons").val();
 
             var productHtml = `
-                                                                                                                                            <div class="selectedDiv" id="selectedDiv${id}" style="font-size: 15px;">
-                                                                                                                                            <input type="hidden" value="${id}" name="Id" />
-                                                                                                                                            <input type="hidden" value="${selectedCustomerId}" name="CustomerId" />
-                                                                                                                                            <input type="hidden" value="${selectedContactPersons}" name="ContactPersonId" />
-                                                                                                                                            <div class="form-row row">
-                                                                                                                                                <div class="form-group col-lg-5 col-md-5 col-12">
-                                                                                                                                                    <label> <b>Ürün Kategori </b></label>
-                                                                                                                                                    <label class="selectedDivItem${id}">${categoryName}</label>
-                                                                                                                                                </div>
-                                                                                                                                                <div class="form-group col-lg-5 col-md-5 col-12">
-                                                                                                                                                            <label> <b>Ürün Adı </b></label><br/>
-                                                                                                                                                    <label class="selectedDivItem${id}">${productName}</label>
-                                                                                                                                                </div>
-                                                                                                                                            </div>
-                                                                                                                                            <div class="form-row row">
-                                                                                                                                                <div class="form-group col-lg-5 col-md-5 col-12">
-                                                                                                                                                            <label for="inputName"> <b>Adet </b></label>
-                                                                                                                                                    <input type="number" id="Amount" class="form-control amounts" name="Amount" placeholder="Adet" />
-                                                                                                                                                </div>
-                                                                                                                                                <div class="form-group col-lg-5 col-md-5 col-12">
-                                                                                                                                                            <label> <b>İskonto</b></label>
-                                                                                                                                                    <input type="text" id="Discount" class="form-control" name="Discount" placeholder="İskonto" value="${productDiscount}" />
-                                                                                                                                                </div>
-                                                                                                                                                <div class="form-group col-lg-1 col-md-1 col-12">
-                                                                                                                                                    <button class=" btn btn-danger  remove-contact" onclick="removeDiv(${id})" >Sil</button>
-                                                                                                                                                </div>
-                                                                                                                                            </div>
-                                                                                                                                        <hr />
-                                                                                                                                        </div>
-                                                                                                                                            `;
+                <div class="selectedDiv" id="selectedDiv${id}" style="font-size: 15px;">
+                <input type="hidden" value="${id}" name="Id" />
+                <input type="hidden" value="${selectedCustomerId}" name="CustomerId" />
+                <input type="hidden" value="${selectedContactPersons}" name="ContactPersonId" />
+                <div class="form-row row">
+                    <div class="form-group col-lg-5 col-md-5 col-12">
+                        <label> <b>Ürün Kategori </b></label>
+                        <label class="selectedDivItem${id}">${categoryName}</label>
+                    </div>
+                    <div class="form-group col-lg-5 col-md-5 col-12">
+                                <label> <b>Ürün Adı </b></label><br/>
+                        <label class="selectedDivItem${id}">${productName}</label>
+                    </div>
+                </div>
+                <div class="form-row row">
+                    <div class="form-group col-lg-5 col-md-5 col-12">
+                                <label for="inputName"> <b>Adet </b></label>
+                        <input type="number" id="Amount" class="form-control amounts" name="Amount" placeholder="Adet" />
+                    </div>
+                    <div class="form-group col-lg-5 col-md-5 col-12">
+                                <label> <b>İskonto</b></label>
+                        <input type="text" id="Discount" class="form-control" name="Discount" placeholder="İskonto" value="${productDiscount}" />
+                    </div>
+                    <div class="form-group col-lg-1 col-md-1 col-12">
+                        <button class=" btn btn-danger  remove-contact" onclick="removeDiv(${id})" >Sil</button>
+                    </div>
+                </div>
+            <hr />
+            </div>
+                `;
             //document.getElementById('selectedProducts').innerHTML += productHtml; // bu yöntem ile yapıldığında her ürün eklemede içerikler sıfırlanıyor!
             selectedProducts.insertAdjacentHTML('beforeend', productHtml);
 
@@ -427,8 +411,6 @@
 @*Önizlme*@
 <script>
     function sendSelectedProducts() {
-
-
         let formData = new FormData(document.querySelector('#seletectedProductsForm')); // Form verilerini al
 
         $.ajax({
@@ -447,10 +429,6 @@
             }
         });
     }
-
-
-
-
 </script>
 
 @*Seçilen ürünü kaldırma*@

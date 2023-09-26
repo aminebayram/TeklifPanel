@@ -135,9 +135,13 @@ namespace TeklifPanelWebUI.Controllers
                 var reslt = await _userManager.DeleteAsync(user);
                 if (reslt.Succeeded)
                 {
-                    TempData["Message"] = $"{user.FirstName} {user.LastName} adlı kullanıcı silindi!";
-                    return RedirectToAction("UserList");
+                    return Json(new { status = 200 });
                 }
+                else
+                {
+                    return Json(new { status = 400 });
+                }
+
             }
 
             TempData["Error"] = "Kullanıcı silinemedi!";

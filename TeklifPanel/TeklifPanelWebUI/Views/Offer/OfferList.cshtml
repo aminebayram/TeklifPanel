@@ -24,18 +24,20 @@
             <th class="text-left">Göderilen Firma Adı</th>
             <th class="text-left">Gönderici</th>
             <th class="text-left">Tarih</th>
+            <th class="text-left">Toplam Tutar</th>
             <th class="text-left">Durum</th>
             <th class="text-left">Görüntüle</th>
 @*            <th class="text-left">Yazdır</th>
 *@        </tr>
     </thead>
     <tbody class="table-hover">
-        @foreach (var offer in Model)
+        @foreach (var offer in Model.OrderByDescending(o => o.DateOfOffer))
         {
             <tr>
                 <td class="text-left">@offer.Customer.Name</td>
                 <td class="text-left">@offer.User.FirstName</td>
                 <td class="text-left">@offer.DateOfOffer</td>
+                <td class="text-left">@offer.TotalPrice</td>
                 <td class="text-left"><i class="fas fa-check-double" title="Görüldü"></i></td>
                 <td class="text-left">
                     <a href="@Jobs.PdfRoute@offer.CompanyId/@offer.Pdf" target="_blank">

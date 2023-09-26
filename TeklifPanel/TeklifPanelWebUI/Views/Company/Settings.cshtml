@@ -102,7 +102,7 @@
                         <input required type="text" class="form-control" name="IbanNumber" maxlength="255" id="@ibanid" onchange="SetIbansVal(@Model.Ibans.ToList().IndexOf(iban))" value="@iban.IbanNumber">
                     </div>
                     <div class="form-group col-lg-2 col-md-2 col-2">
-                        <a class="btn btn-danger silmebuton" asp-controller="Company" asp-action="IbanDelete" asp-route-id="@iban.Id">Sil</a>
+                        <a class="btn btn-outline-danger silmebuton" asp-controller="Company" asp-action="IbanDelete" asp-route-id="@iban.Id">Sil</a>
                     </div>
                     <input type="hidden" id="@inputid" name="IbanTitle" />
                 }
@@ -137,7 +137,7 @@
                             <input required type="text" class="form-control" id=${ibanid} name="IbanNumber" onchange="SetIbansVal(${index})" maxlength="255">
                     </div>
                     <div class="form-group col-lg-2 col-md-2 col-2">
-                        <button class=" btn btn-danger silmebuton remove-iban" >Sil</button>
+                        <button class=" btn btn-outline-danger silmebuton remove-iban" >Sil</button>
                     </div>
                 </div>
                     <input type="hidden" name="IbanTitle" id="${inputid}"> `;

@@ -188,6 +188,13 @@ namespace TeklifPanelWebUI.Controllers
             return RedirectToAction("ProductList");
         }
 
+        public async Task<IActionResult> Search(string searchWord)
+        {
+            var companyId = HttpContext.Session.GetInt32("CompanyId") ?? default;
+            var search = await _productService.GetSearchProduct(companyId, searchWord);
+
+            return View(search);
+        }
     }
 }
 

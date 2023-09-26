@@ -160,7 +160,7 @@ namespace TeklifPanelWebUI.Controllers
         }
 
         [HttpPost]
-        public async Task<IActionResult> SendMail(IFormFile pdfFile, int CustomerId, int OfferNumber, int ContactPersonId, string Total)
+        public async Task<IActionResult> SendMail(IFormFile pdfFile, int CustomerId, int OfferNumber, int ContactPersonId, decimal Total, decimal Discount)
         {
             var companyId = HttpContext.Session.GetInt32("CompanyId") ?? default;
             var userId = HttpContext.Session.GetString("UserId") ?? default;
@@ -220,8 +220,18 @@ namespace TeklifPanelWebUI.Controllers
                 smtp.UseDefaultCredentials = false;
                 smtp.Credentials = new NetworkCredential(mail, sifre);
             }
+
+
+
             var message = new MailMessage(fromAddress, toAddress);
+            message.Body = String.Format(@"Merhaba, <br/><b>" + customer.Name + "</b> adlı firmadan teklif gönderildi"); 
+            message.Subject = customer.Name;
+            message.IsBodyHtml = true;
+
             var message2 = new MailMessage(fromAddress, customerEmail);
+            message2.Body = String.Format(@"Merhaba, <br/><b>" + company.Name + "</b> adlı firmadan teklif gönderildi");
+            message2.Subject = company.Name;
+            message2.IsBodyHtml = true;
 
             var pdf = Jobs.UploadPdf(pdfFile, Jobs.MakeUrl(customer.Name), companyId);
 
@@ -231,7 +241,7 @@ namespace TeklifPanelWebUI.Controllers
             // PDF dosyasını ekleyin
             var attachment = new Attachment(pdf);
 
-
+            
             message.Attachments.Add(attachment);
             message2.Attachments.Add(attachment);
 
@@ -244,8 +254,6 @@ namespace TeklifPanelWebUI.Controllers
                 smtp.Send(message2);
             }
 
-
-
             var offer = new Offer()
             {
                 Pdf = pdfUrl,
@@ -257,12 +265,75 @@ namespace TeklifPanelWebUI.Controllers
                 UserId = user.Id,
                 CustomerContact = contactPerson,
                 OfferNumber = OfferNumber,
+                TotalPrice = Total,
+                Discount = Discount
             };
 
             var result = await _offerService.CreateAsync(offer);
 
             return View();
         }
+
+        //[Route("form")]
+        //[Route("{culture}/form/{url?}/{id?}")]
+        //public JsonResult iletisimUpload2(string ad, string email, string mesaj)
+        //{
+        //    string dil = RouteData.Values["culture"].ToString();
+        //    VeriServisClient client = new VeriServisClient();
+        //    Filtre veri = new Filtre();
+        //    veri.DilId = method.CheckLanguage(dil);
+        //    veri.FirmaId = Firma.FirmaId;
+        //    List<M_Sabitler> liste = client.SabitlerGetir(veri).ToList();
+        //    string sunucu = liste.FirstOrDefault(x => x.Parametre == "EmailSunucu").Deger;
+        //    var port = liste.FirstOrDefault(x => x.Parametre == "EmailSunucuPort").Deger;
+        //    string mail = liste.FirstOrDefault(x => x.Parametre == "EmailKullaniciAdi").Deger;
+        //    string sifre = liste.FirstOrDefault(x => x.Parametre == "EmailParola").Deger;
+        //    string mailkutusu = liste.FirstOrDefault(x => x.Parametre == "AliciEmail").Deger;
+        //    string icerik = String.Format(@"Merhaba, <br/><b>" + ad + "</b> adlı kişi bir başvuru gönderdi." + "<p>Talep Edilen Kişisel Veri: <br/>" + mesaj + "</p>");
+        //    var fromAddress = new MailAddress(mail, "Eds Döküm KVKK Başvuru Formu");
+        //    var toAddress = new MailAddress("elifakgun@edsdokum.com.tr", "edsdokum@hs01.kep.tr");
+        //    string subject = "Eds Döküm";
+        //    string body = icerik;
+        //    SmtpClient smtp = new SmtpClient();
+        //    try
+        //    {
+
+        //        smtp.Host = sunucu;
+        //        smtp.Port = Convert.ToInt32(port);
+        //        smtp.EnableSsl = false;
+        //        smtp.DeliveryMethod = SmtpDeliveryMethod.Network;
+        //        smtp.UseDefaultCredentials = false;
+        //        smtp.Credentials = new NetworkCredential(mail, sifre);
+
+        //    }
+        //    catch
+        //    {
+        //        smtp.Host = sunucu;
+        //        smtp.Port = Convert.ToInt32(port);
+        //        smtp.EnableSsl = true;
+        //        smtp.DeliveryMethod = SmtpDeliveryMethod.Network;
+        //        smtp.UseDefaultCredentials = false;
+        //        smtp.Credentials = new NetworkCredential(mail, sifre);
+        //    }
+        //    var message = new MailMessage(fromAddress, toAddress);
+        //    message.Subject = subject;
+        //    message.Body = body;
+        //    message.IsBodyHtml = true;
+        //    {
+        //        smtp.Send(message);
+        //    }
+        //    client.Close();
+        //    string sonuc;
+        //    if (dil == "tr")
+        //    {
+        //        sonuc = "Başvurunuz iletilmiştir..";
+        //    }
+        //    else
+        //    {
+        //        sonuc = "Your application has been sent..";
+        //    }
+        //    return Json(sonuc);
+        //}
 
         public async Task<IActionResult> Search(int customerId, string searchWord)
         {

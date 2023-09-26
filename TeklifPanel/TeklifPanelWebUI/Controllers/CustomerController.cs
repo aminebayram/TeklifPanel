@@ -62,6 +62,7 @@ namespace TeklifPanelWebUI.Controllers
                         Email = customerViewModel?.ContactEmail[i],
                         Name = customerViewModel?.ContactName[i],
                         Phone = customerViewModel?.ContactPhone[i],
+                        CompanyId = companyId
                     });
                 }
 
@@ -97,6 +98,7 @@ namespace TeklifPanelWebUI.Controllers
                 TaxOffice = customer.TaxOffice,
                 Email = customer.Email,
                 Note = customer.Note,
+                CompanyId = customer.CompanyId,
             };
             customerViewModel.CustomerContacts = customer.CustomerContacts;
             return View(customerViewModel);
@@ -104,6 +106,7 @@ namespace TeklifPanelWebUI.Controllers
         [HttpPost]
         public async Task<IActionResult> UpdateCustomer(CustomerViewModel customerViewModel)
         {
+            var companyId = HttpContext.Session.GetInt32("CompanyId") ?? default;
             var getCustomer = await _customerService.GetCustomerAsync(customerViewModel.Id);
 
             if (getCustomer == null)
@@ -145,6 +148,7 @@ namespace TeklifPanelWebUI.Controllers
                             Email = customerViewModel?.ContactEmail[i],
                             Name = customerViewModel?.ContactName[i],
                             Phone = customerViewModel?.ContactPhone[i],
+                            CompanyId = companyId
                         });
                     }
                 }
@@ -161,16 +165,14 @@ namespace TeklifPanelWebUI.Controllers
         }
 
         public async Task<IActionResult> DeleteCustomer(int id)
-        {
-            var customer = await _customerService.GetByIdAsync(id);
+         {
             var isCustomerDelete = await _customerService.DeleteCustomerAsync(id);
             if (isCustomerDelete)
             {
-                TempData["Message"] = $"'{customer.Name}' adlı müşteri silindi";
-                return RedirectToAction("CustomerList");
+                return Json(new { status = 200 });
             }
-            TempData["Error"] = $"'{customer.Name}' adlı müşteri silinemedi";
-            return RedirectToAction("CustomerList");
+            return Json(new { status = 400 });
+
         }
 
         public async Task<IActionResult> ContactPersonDelete(int id)
@@ -179,12 +181,10 @@ namespace TeklifPanelWebUI.Controllers
             var isDelete = await _contactPersonService.DeleteAsync(contactPerson);
             if (isDelete)
             {
-                TempData["Meassage"] = "Kontackt Kişisi silindi!";
-                return RedirectToAction("UpdateCustomer");
-            }
+                return Json(new { status = 200 });
 
-            TempData["Error"] = "Kontackt Kişisi silinemedi!";
-            return RedirectToAction("UpdateCustomer", id);
+            }
+            return Json(new { status = 400 });
         }
     }
 }

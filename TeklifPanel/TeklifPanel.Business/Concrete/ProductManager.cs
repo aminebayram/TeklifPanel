@@ -78,7 +78,7 @@ namespace TeklifPanel.Business.Concrete
             return await _productRepository.GetProductsByCategoryAsync(companyId, categoryId);
         }
 
-        public async Task<List<Product>> GetSearchProduct(int companyId, string searchWord)
+        public async Task<List<Product>> GetSearchProduct(int? companyId, string searchWord)
         {
            return await _productRepository.GetSearchProduct(companyId, searchWord);
         }

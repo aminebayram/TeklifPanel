@@ -1,0 +1,31 @@
+﻿@model List<Product>
+
+    @{
+        Layout = null;
+    }
+@foreach (var product in Model)
+{
+    <tr>
+        <td class="text-center">
+            @if (product.ProductImages.Count() > 0)
+            {
+                foreach (var image in product.ProductImages.Take(1))
+                {
+                    <img src="@Jobs.ImageRoute@product.CompanyId/@image.Url" alt="">
+                }
+            }
+        </td>
+        <td class="text-left">@product.Name</td>
+        <td class="text-left">@product.Code</td>
+        <td class="text-left">@product.BuyPrice₺</td>
+        <td class="text-left">@product.SellPrice₺</td>
+        <td class="text-left">
+            @product.Detail
+        </td>
+        <td class="text-center">
+            <a class="btn btn-outline-success" asp-controller="Product" asp-action="UpdateProduct" asp-route-id="@product.Id"><i class="fas fa-pen" style="padding-right: 6%;"></i></a>
+            <a class="btn btn-outline-danger" onclick="deleteProduct('@product.Id')"><i class="fas fa-times"></i></a>
+
+        </td>
+    </tr>
+}

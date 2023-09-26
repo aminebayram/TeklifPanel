@@ -770,6 +770,133 @@ div#selectedProducts {
     overflow-x: hidden;
 }
 
-.form-switch {
+/*.form-switch {
     padding-left: 0 !important;
+}
+*/
+.login-box {
+    background: #1A2226;
+    text-align: center;
+    box-shadow: 0 3px 6px rgba(0, 0, 0, 0.16), 0 3px 6px rgba(0, 0, 0, 0.23);
+}
+
+.login-key {
+    height: 100px;
+    font-size: 80px;
+    line-height: 100px;
+    background: -webkit-linear-gradient(#27EF9F, #FF7700);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+}
+
+.login-title {
+    margin-top: 15px;
+    text-align: center;
+    font-size: 30px;
+    letter-spacing: 2px;
+    margin-top: 15px;
+    font-weight: bold;
+    color: #ECF0F5;
+}
+
+.login-form {
+    margin-top: 25px;
+    text-align: left;
+}
+
+.giris input[type=text] {
+    background-color: #1A2226;
+    border: none;
+    border-bottom: 2px solid #FF7700;
+    border-top: 0px;
+    border-radius: 0px;
+    font-weight: bold;
+    outline: 0;
+    margin-bottom: 20px;
+    padding-left: 0px;
+    color: #ECF0F5;
+}
+
+.giris input[type=password] {
+    background-color: #1A2226;
+    border: none;
+    border-bottom: 2px solid #FF7700;
+    border-top: 0px;
+    border-radius: 0px;
+    font-weight: bold;
+    outline: 0;
+    padding-left: 0px;
+    margin-bottom: 20px;
+    color: #ECF0F5;
+}
+
+.giris .form-group {
+    margin-bottom: 40px;
+    outline: 0px;
+}
+
+.giris .form-control:focus {
+    border-color: inherit;
+    -webkit-box-shadow: none;
+    box-shadow: none;
+    border-bottom: 2px solid #FF7700;
+    outline: 0;
+    background-color: #1A2226;
+    color: #ECF0F5;
+}
+
+.giris input:focus {
+    outline: none;
+    box-shadow: 0 0 0;
+}
+
+.giris label {
+    margin-bottom: 0px;
+}
+
+.giris .form-control-label {
+    font-size: 10px;
+    color: #6C6C6C;
+    font-weight: bold;
+    letter-spacing: 1px;
+}
+
+.giris .btn-outline-primary {
+    border-color: #FF7700;
+    color: #FF7700;
+    border-radius: 0px;
+    font-weight: bold;
+    letter-spacing: 1px;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.12), 0 1px 2px rgba(0, 0, 0, 0.24);
+}
+
+
+    .giris .btn-outline-primary:hover {
+        background-color: #FF7700;
+        right: 0px;
+        color: white;
+    }
+
+.login-btm {
+    float: left;
+}
+
+.login-button {
+    padding-right: 0px;
+    margin-bottom: 25px;
+}
+
+.login-text {
+    text-align: left;
+    padding-left: 0px;
+    color: #A2A4A4;
+}
+
+.loginbttm {
+    padding: 0px;
+}
+
+.kutucuk-tarih {
+    position: absolute;
+    bottom: 2%;
 }

@@ -47,14 +47,14 @@
             {
                 var userName = User.Identity.Name.ToString();
                 var admin = Model.FirstOrDefault(x => x.UserName == userName);
-                <tr>
-                    <td class="text-center">@admin.FirstName</td>
-                    <td class="text-center">@admin.LastName</td>
-                    <td class="text-center">@admin.Email</td>
-                    <td class="text-center">
-                        <a asp-controller="Admin" asp-action="UserEdit" asp-route-id="@admin.Id"><i class="fas fa-pen" style="padding-right: 6%;"></i></a>
-                    </td>
-                </tr>
+                //<tr>
+                //    <td class="text-center">@admin.FirstName</td>
+                //    <td class="text-center">@admin.LastName</td>
+                //    <td class="text-center">@admin.Email</td>
+                //    <td class="text-center">
+                //        <a class="btn btn-outline-success" asp-controller="Admin" asp-action="UserEdit" asp-route-id="@admin.Id"><i class="fas fa-pen" style="padding-right: 6%;"></i></a>
+                //    </td>
+                //</tr>
 
                 foreach (var user in Model.Where(x => x.UserName != userName))
                 {
@@ -63,8 +63,8 @@
                         <td class="text-center">@user.LastName</td>
                         <td class="text-center">@user.Email</td>
                         <td class="text-center">
-                            <a asp-controller="Admin" asp-action="UserEdit" asp-route-id="@user.Id"><i class="fas fa-pen" style="padding-right: 6%;"></i></a>
-                            <a asp-controller="Admin" asp-action="UserDelete" asp-route-id="@user.Id"><i class="fas fa-times"></i></a>
+                            <a class="btn btn-outline-success" asp-controller="Admin" asp-action="UserEdit" asp-route-id="@user.Id"><i class="fas fa-pen" style="padding-right: 6%;"></i></a>
+                            <a class="btn btn-outline-danger" onclick="isDeleted('@user.Id')"><i class="fas fa-times"></i></a>
                         </td>
                     </tr>
                 }
@@ -72,3 +72,44 @@
         }
     </tbody>
 </table>
+
+<script>
+    function isDeleted(id) {
+        Swal.fire({
+            title: 'Silmek istediğinize emin misiniz?',
+            text: "İlgili kullanıcı kalıcı olarak silinecek!",
+            icon: 'warning',
+            showCancelButton: true,
+            confirmButtonColor: '#3085d6',
+            cancelButtonColor: '#d33',
+            confirmButtonText: 'Evet, sil!'
+        }).then((result) => {
+            if (result.isConfirmed) {
+                $.ajax({
+                    type: 'POST',
+                    url: '/Admin/UserDelete',
+                    data: { id: id },
+                    success: function (res) {
+                        console.log(res.status);
+                        if (res.status == 200) {
+                            Swal.fire({
+                                icon: 'success',
+                                title: 'Başarıyla Silindi',
+                                confirmButtonText: 'Tamam',
+                            }).then(function () {
+                                location.href = "";
+                            });
+                        } else {
+                            Swal.fire({
+                                icon: 'warning',
+                                title: 'Oops...',
+                                text: res.message
+                            });
+                        }
+                    }
+                });
+
+            }
+        });
+    }
+</script>
