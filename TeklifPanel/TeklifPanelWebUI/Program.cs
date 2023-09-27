@@ -12,8 +12,8 @@ using TeklifPanel.Entity;
 var builder = WebApplication.CreateBuilder(args);
 
 //builder.Services.AddDbContext<TeklifPanelContext>(options => options.UseSqlServer(builder.Configuration.GetConnectionString("SqlServerConnectionLocal")));
-//builder.Services.AddDbContext<TeklifPanelContext>(options => options.UseSqlServer(builder.Configuration.GetConnectionString("SqlServerConnectionTest")));
-builder.Services.AddDbContext<TeklifPanelContext>(options => options.UseSqlServer(builder.Configuration.GetConnectionString("SqlServerConnection")));
+builder.Services.AddDbContext<TeklifPanelContext>(options => options.UseSqlServer(builder.Configuration.GetConnectionString("SqlServerConnectionTest")));
+//builder.Services.AddDbContext<TeklifPanelContext>(options => options.UseSqlServer(builder.Configuration.GetConnectionString("SqlServerConnection")));
 builder.Services.AddIdentity<User, IdentityRole>().AddEntityFrameworkStores<TeklifPanelContext>().AddDefaultTokenProviders();
 
 builder.Services.AddSession();
